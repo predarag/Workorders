@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/item_home"
+        android:icon="@mipmap/ic_menu_home"
+        android:title="@string/title_home"
+        />
+
+    <item
+        android:id="@+id/item_workorders"
+        android:icon="@mipmap/notepad"
+        android:title="@string/title_nalozi" />
+
+    <item
+        android:id="@+id/item_search"
+        android:icon="@mipmap/search"
+        android:title="@string/title_search" />
+
+    <item
+        android:id="@+id/item_profile"
+        android:icon="@mipmap/settings"
+        android:title="@string/title_profile"
+        android:visible="false"/>
+
+
+
+
+
+</menu>
