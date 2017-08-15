@@ -14,6 +14,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.activity.HomeActivity;
+import rs.co.sbb.workorders.activity.WorkordersActivity;
 
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService{
@@ -36,7 +37,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     private void sendNotification(String messageBody){
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, WorkordersActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);

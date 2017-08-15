@@ -33,8 +33,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.WorkordersActivity" />
         </activity>
+        <activity android:name=".activity.HomeActivity" />
+        <activity
+            android:name=".activity.TotalTvActivationActivity"
+            android:parentActivityName=".activity.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeActivity" />
+        </activity>
 
-        <activity android:name=".activity.HomeActivity"/>
+        <!-- [START ]SERVICES  -->
 
         <service
             android:name=".service.FirebaseMessagingService"
@@ -50,6 +58,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <!-- [END]SERVICES  -->
 
     </application>
 

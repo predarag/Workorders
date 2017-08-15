@@ -12,8 +12,8 @@ import rs.co.sbb.workorders.ws.TokenService;
 
 public class TokenServiceImpl  {
 
-    private Context context;
-    private Retrofit retrofit;
+
+   private Retrofit retrofit;
 
    public TokenServiceImpl(){
 

@@ -27,6 +27,7 @@
 
                 <EditText
                     android:id="@+id/etSearchWorkorder"
+                    style="@style/Widget.AppCompat.EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_search_workorder"
@@ -34,18 +35,21 @@
                     android:imeActionLabel="@string/action_search_workorder_short"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:layout_margin="10dp"/>
 
 
 
             <Button
                 android:id="@+id/btnSearchWorkorder"
-                style="?android:textAppearanceSmall"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:background="?attr/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_search"
                 android:textStyle="bold"
+                android:layout_margin="10dp"
                 />
 
 

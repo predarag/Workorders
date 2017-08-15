@@ -24,12 +24,16 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.entity.TokenResponse;
+import rs.co.sbb.workorders.entity.LoginRequest;
+import rs.co.sbb.workorders.entity.LoginResponse;
 import rs.co.sbb.workorders.utils.Utils;
+import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
 import rs.co.sbb.workorders.ws.impl.TokenServiceImpl;
 
 
@@ -88,10 +92,6 @@ public class LoginActivity extends AppCompatActivity  {
 
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
         // Reset errors.
         mUsernameView.setError(null);
         mPasswordView.setError(null);
@@ -103,12 +103,7 @@ public class LoginActivity extends AppCompatActivity  {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(username)) {
@@ -116,7 +111,7 @@ public class LoginActivity extends AppCompatActivity  {
             focusView = mUsernameView;
             cancel = true;
         } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_email));
+            mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
         }
@@ -131,11 +126,13 @@ public class LoginActivity extends AppCompatActivity  {
             TokenServiceImpl tokenService = new TokenServiceImpl();
 
             String token = FirebaseInstanceId.getInstance().getToken();
+            Log.i("LOGIN",token);
 
-            showProgress(false);
-            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
-            LoginActivity.this.startActivity(i);
+            login(username,password,focusView);
 
+            /*Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            LoginActivity.this.startActivity(i);*/
+            //finish();
            /* if(null != token && !token.equals("")) {
 
                 Call<TokenResponse> call = tokenService.token(username,token);
@@ -164,11 +161,6 @@ public class LoginActivity extends AppCompatActivity  {
     private boolean isUsernameValid(String username) {
         //TODO: Replace this with your own logic
         return null != username && !username.equals("");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -207,6 +199,76 @@ public class LoginActivity extends AppCompatActivity  {
         }
     }
 
+
+    private void login(String username, String password, View focusView){
+
+        ExternalAuthServiceImpl service = new ExternalAuthServiceImpl();
+
+        LoginRequest request = new LoginRequest();
+        request.setUsername(username);
+        request.setPassword(password);
+
+        Call<LoginResponse> call = service.login(request);
+
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
+                if(null != response && !response.isSuccessful() && response.errorBody() != null){
+                    Log.i("login", response.code()+"");
+                    Log.i("login", response.errorBody()+"");
+
+                    showProgress(false);
+
+                    try {
+                        Toast.makeText(LoginActivity.this,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.e("streets",e.getMessage());
+                        showProgress(false);
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    LoginResponse loginResponse = response.body();
+                    Log.i("login",loginResponse.toString());
+                    showProgress(false);
+                    View view = null;
+                    if(null != loginResponse.getStatus() && !loginResponse.getStatus().equals("OK")){
+                        if(null!= loginResponse.getStatusMessage()){
+                            switch (loginResponse.getStatusMessage()) {
+                                case "User is not active":
+                                    mPasswordView.setError("Korisnik nije aktivan");
+                                    view = mPasswordView;
+                                    break;
+                                case "User doesn't exist":
+                                    mPasswordView.setError("Neispravno korisnicko ime ili lozinka");
+                                    view = mPasswordView;
+                                    break;
+                            }
+                        }
+                    }
+
+                    else{
+                        if(loginResponse.getUser().getIsActive().equals("1")){
+                            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+                            LoginActivity.this.startActivity(i);
+                            finish();
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.i("login",t.getMessage());
+                t.printStackTrace();
+
+            }
+        });
+
+    }
 
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -263,6 +325,10 @@ public class LoginActivity extends AppCompatActivity  {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }
 

@@ -38,7 +38,7 @@ public class WorkordersActivity extends AppCompatActivity {
 
                     break;
                 case R.id.item_workorders:
-                    mTextMessage.setText(R.string.title_nalozi);
+                    //mTextMessage.setText(R.string.title_nalozi);
                     break;
                 case R.id.item_search:
                     Intent intentSearch = new Intent(WorkordersActivity.this, SearchWorkorderActivity.class);
@@ -116,5 +116,9 @@ public class WorkordersActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

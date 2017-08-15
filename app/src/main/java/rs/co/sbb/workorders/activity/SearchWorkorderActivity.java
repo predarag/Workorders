@@ -76,4 +76,8 @@ public class SearchWorkorderActivity extends AppCompatActivity {
         super.onPause();
         overridePendingTransition(0,0);
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

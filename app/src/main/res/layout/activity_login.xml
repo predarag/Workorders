@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"
     tools:context="rs.co.sbb.workorders.activity.LoginActivity">
 
     <!-- Login progress -->
@@ -63,9 +64,11 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
             <Button
                 android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:background="?attr/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -75,4 +78,6 @@
 
         </LinearLayout>
     </ScrollView>
+
+
 </LinearLayout>
