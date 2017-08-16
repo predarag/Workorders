@@ -26,12 +26,14 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
+import rs.co.sbb.workorders.utils.SaveSharedPreference;
 import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
 import rs.co.sbb.workorders.ws.impl.TokenServiceImpl;
@@ -39,8 +41,6 @@ import rs.co.sbb.workorders.ws.impl.TokenServiceImpl;
 
 public class LoginActivity extends AppCompatActivity  {
 
-
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private TextView mUsernameView;
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity  {
 
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -67,7 +67,15 @@ public class LoginActivity extends AppCompatActivity  {
                 }
                 return false;
             }
-        });
+        });*/
+
+        if(null != SaveSharedPreference.getUser(this) && !SaveSharedPreference.getUser(this).equals("")){
+            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            LoginActivity.this.startActivity(i);
+        }
+        else{
+            attemptLogin();
+        }
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -81,6 +89,24 @@ public class LoginActivity extends AppCompatActivity  {
         mProgressView = findViewById(R.id.login_progress);
 
         Toast.makeText(this, Utils.getIPAddress(true),Toast.LENGTH_LONG).show();
+
+        Log.i("TAG", "SERIAL: " + Build.SERIAL);
+        Log.i("TAG","MODEL: " + Build.MODEL);
+        Log.i("TAG","ID: " + Build.ID);
+        Log.i("TAG","Manufacture: " + Build.MANUFACTURER);
+        Log.i("TAG","brand: " + Build.BRAND);
+        Log.i("TAG","type: " + Build.TYPE);
+        Log.i("TAG","user: " + Build.USER);
+        Log.i("TAG","BASE: " + Build.VERSION_CODES.BASE);
+        Log.i("TAG","INCREMENTAL " + Build.VERSION.INCREMENTAL);
+        Log.i("TAG","SDK  " + Build.VERSION.SDK);
+        Log.i("TAG","BOARD: " + Build.BOARD);
+        Log.i("TAG","BRAND " + Build.BRAND);
+        Log.i("TAG","HOST " + Build.HOST);
+        Log.i("TAG","FINGERPRINT: "+Build.FINGERPRINT);
+        Log.i("TAG","Version Code: " + Build.VERSION.RELEASE);
+        Log.i("TAG","HARDWARE: " + Build.HARDWARE);
+
 
     }
 
@@ -107,11 +133,11 @@ public class LoginActivity extends AppCompatActivity  {
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
+           // mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
         } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
+            //mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
         }
@@ -219,15 +245,8 @@ public class LoginActivity extends AppCompatActivity  {
                     Log.i("login", response.errorBody()+"");
 
                     showProgress(false);
-
-                    try {
-                        Toast.makeText(LoginActivity.this,response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.e("streets",e.getMessage());
-                        showProgress(false);
-                        e.printStackTrace();
-                    }
-                }
+                    Utils.showDialog(LoginActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom. Pokušajte ponovo!");
+                                    }
                 else{
                     LoginResponse loginResponse = response.body();
                     Log.i("login",loginResponse.toString());
@@ -237,12 +256,14 @@ public class LoginActivity extends AppCompatActivity  {
                         if(null!= loginResponse.getStatusMessage()){
                             switch (loginResponse.getStatusMessage()) {
                                 case "User is not active":
-                                    mPasswordView.setError("Korisnik nije aktivan");
-                                    view = mPasswordView;
+                                    //mPasswordView.setError("Korisnik nije aktivan");
+                                    Utils.showDialog(LoginActivity.this,"",getString(R.string.error_user_not_exist));
+
                                     break;
                                 case "User doesn't exist":
-                                    mPasswordView.setError("Neispravno korisnicko ime ili lozinka");
-                                    view = mPasswordView;
+                                    //mPasswordView.setError("Neispravno korisnicko ime ili lozinka");
+                                    //view = mPasswordView;
+                                    Utils.showDialog(LoginActivity.this,"",getString(R.string.error_invalid_username_password));
                                     break;
                             }
                         }
@@ -252,7 +273,7 @@ public class LoginActivity extends AppCompatActivity  {
                         if(loginResponse.getUser().getIsActive().equals("1")){
                             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
                             LoginActivity.this.startActivity(i);
-                            finish();
+                            Utils.setUserPreference(LoginActivity.this,loginResponse.getUser());
                         }
                     }
 
@@ -262,7 +283,9 @@ public class LoginActivity extends AppCompatActivity  {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                showProgress(false);
                 Log.i("login",t.getMessage());
+                Utils.showDialog(LoginActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom. Pokušajte ponovo!");
                 t.printStackTrace();
 
             }
@@ -271,61 +294,6 @@ public class LoginActivity extends AppCompatActivity  {
     }
 
 
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            String token = FirebaseInstanceId.getInstance().getToken();
-            if(null != token && !token.equals("")) {
-                //Toast.makeText(getApplicationContext(), "NULLLLL", Toast.LENGTH_SHORT).show();
-                Log.i("TOKEN", token);
-            }
-            else {
-                //Toast.makeText(getApplicationContext(),"NIJEE NULLLLL",Toast.LENGTH_SHORT).show();
-                Log.i("TOKEN", "NULL je");
-            }
-
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 
     @Override
     public void onBackPressed() {

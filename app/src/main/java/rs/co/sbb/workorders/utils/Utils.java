@@ -1,9 +1,22 @@
 package rs.co.sbb.workorders.utils;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
+
+import rs.co.sbb.workorders.R;
+import rs.co.sbb.workorders.entity.User;
 
 /**
  * Created by Predrag.Tasic on 8/11/2017.
@@ -37,6 +50,42 @@ public class Utils {
         } catch (Exception ex) { } // for now eat exceptions
         return "";
     }
+
+
+    public static void setUserPreference(Context context,User user){
+
+        SaveSharedPreference.setUser(context,user.getUsername());
+        SaveSharedPreference.setFirstname(context,user.getFirstName());
+        SaveSharedPreference.setLastname(context,user.getLastName());
+        SaveSharedPreference.setEmail(context,user.getEmail());
+        SaveSharedPreference.setPhone(context,user.getPhoneNumber());
+    }
+
+    public static void deleteUserPreference(Context context){
+        SaveSharedPreference.setUser(context,null);
+        SaveSharedPreference.setFirstname(context,null);
+        SaveSharedPreference.setLastname(context,null);
+        SaveSharedPreference.setEmail(context,null);
+        SaveSharedPreference.setPhone(context,null);
+    }
+
+    public static void showDialog(Context context, String title, String message){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
+
+        dlgAlert.setMessage(title);
+        dlgAlert.setTitle(message);
+        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+        dlgAlert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+    }
+
 
 
 }

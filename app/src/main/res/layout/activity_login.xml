@@ -29,30 +29,40 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/united_group_logo"
+                android:layout_marginBottom="15dp"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
                 <AutoCompleteTextView
                     android:id="@+id/username"
-                    android:layout_width="match_parent"
+                    android:layout_width="288dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:gravity="center"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
                 <EditText
                     android:id="@+id/password"
-                    android:layout_width="match_parent"
+                    android:layout_width="288dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:imeActionId="@+id/login"
@@ -60,7 +70,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:gravity="center"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -69,11 +80,12 @@
                 android:id="@+id/email_sign_in_button"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:background="?attr/colorPrimary"
-                android:layout_width="match_parent"
+                android:layout_width="288dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold"
+                android:gravity="center"
                />
 
         </LinearLayout>

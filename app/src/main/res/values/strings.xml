@@ -2,8 +2,8 @@
     <string name="app_name">Workorders</string>
 
     <!-- Prompt strings -->
-    <string name="prompt_email">Korisnicko ime</string>
-    <string name="prompt_password">Sifra</string>
+    <string name="prompt_email">Korisničko ime</string>
+    <string name="prompt_password">Šifra</string>
     <string name="prompt_search_workorder">Broj radnog naloga</string>
 
     <!-- Actions string -->
@@ -15,19 +15,28 @@
 
     <!-- Errors string -->
     <string name="error_invalid_email">Email je neispravan</string>
-    <string name="error_invalid_password">Sifra je previse kratka</string>
-    <string name="error_incorrect_password">Neispravna sifra</string>
+    <string name="error_invalid_username_password">Neispravno korisničko ime ili šifra</string>
+    <string name="error_incorrect_password">Neispravna šifra</string>
     <string name="error_field_required">Obavezno polje</string>
+    <string name="error_user_not_exist">Korisnik nije aktivan</string>
+
 
 
     <!-- Title strings -->
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Početna</string>
     <string name="title_nalozi">Nalozi</string>
-    <string name="title_support">Podrska</string>
+    <string name="title_support">Podrška</string>
     <string name="title_profile">Profil</string>
     <string name="title_search">Pretraga</string>
     <string name="title_totaltv">Total TV</string>
+
+
+    <!-- Profile Strings -->
+    <string name="profile_first_name">Ime</string>
+    <string name="profile_last_name">Prezime</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_phone">Telefon</string>
 
 
 </resources>

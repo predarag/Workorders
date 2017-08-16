@@ -25,7 +25,6 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.i("TOKEN",refreshedToken);
 
-        Toast.makeText(getApplicationContext(),refreshedToken, Toast.LENGTH_LONG).show();
 
         sendRegistrationToServer(refreshedToken);
     }
