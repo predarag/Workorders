@@ -32,11 +32,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         remoteMessage.getMessageId();
-
-        sendNotification(notification.getBody());
+        sendNotification(notification.getBody(),notification.getTitle());
     }
 
-    private void sendNotification(String messageBody){
+    private void sendNotification(String messageBody, String title){
         Intent intent = new Intent(this, WorkordersActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -45,7 +44,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         android.support.v4.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setContentTitle("FCM Message")
+                .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
