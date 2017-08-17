@@ -1,4 +1,4 @@
-package rs.co.sbb.workorders.utils;
+package rs.co.sbb.workorders.helper;
 
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;

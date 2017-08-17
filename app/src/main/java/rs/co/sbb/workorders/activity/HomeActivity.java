@@ -2,28 +2,16 @@ package rs.co.sbb.workorders.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.utils.BottomNavigationViewHelper;
-import rs.co.sbb.workorders.ws.impl.SerbianAddressServiceImpl;
+import rs.co.sbb.workorders.helper.BottomNavigationViewHelper;
 
 public class HomeActivity extends AppCompatActivity {
 

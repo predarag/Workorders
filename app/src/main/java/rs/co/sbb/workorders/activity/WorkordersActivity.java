@@ -4,24 +4,38 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.utils.BottomNavigationViewHelper;
+import rs.co.sbb.workorders.entity.Workorder;
+import rs.co.sbb.workorders.helper.BottomNavigationViewHelper;
+import rs.co.sbb.workorders.helper.DividerItemDecoration;
+import rs.co.sbb.workorders.helper.RecyclerTouchListener;
+import rs.co.sbb.workorders.helper.WorkordersAdapter;
 
-public class WorkordersActivity extends AppCompatActivity {
+public class WorkordersActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private TextView mTextMessage;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ArrayList<String> orders;
+    private ListView lstWorkorders;
+
+    private List<Workorder> workorders = new ArrayList<>();
+    private WorkordersAdapter workordersAdapter;
+    private RecyclerView recyclerView;
 
     public static final String WORKORDER_ID = "WORKORDER_ID";
 
@@ -65,38 +79,72 @@ public class WorkordersActivity extends AppCompatActivity {
 
         addMenu();
 
-        attachWorkordersList();
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        workordersAdapter = new WorkordersAdapter(workorders);
+
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(workordersAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+                Workorder workorder = workorders.get(position);
+                Intent i = new Intent(WorkordersActivity.this, WorkorderDetailActivity.class);
+
+                i.putExtra(WORKORDER_ID, workorder.getWorkorderNo());
+
+                startActivity(i);
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        attachWorkordersList2();
+
 
     }
 
+    private void attachWorkordersList2(){
+
+        swipeRefreshLayout.setRefreshing(true);
+
+        //workorders.clear();
+
+        workorders.add(new Workorder("1233456","Nova aktivacija"));
+        workorders.add(new Workorder("76539131","Nova aktivacija"));
+        workorders.add(new Workorder("22243312","Zamena opreme"));
+        workorders.add(new Workorder("98746119","Nova aktivacija"));
+        workorders.add(new Workorder("26326391","Zamena opreme"));
+
+        swipeRefreshLayout.setRefreshing(false);
+
+        workordersAdapter.notifyDataSetChanged();
+    }
+
     private void attachWorkordersList() {
-        ListView lstWorkorders = (ListView) findViewById(R.id.lstWorkorders);
 
-        final ArrayList<String> orders = new ArrayList<String>();
-
+        swipeRefreshLayout.setRefreshing(true);
+        orders.clear();
         orders.add("111112313124");
         orders.add("77777777777");
         orders.add("431687699");
         orders.add("515151551515");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, orders);
+        swipeRefreshLayout.setRefreshing(false);
 
-        lstWorkorders.setAdapter(arrayAdapter);
 
-        lstWorkorders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                String order = orders.get(position);
-
-                Intent i = new Intent(WorkordersActivity.this, WorkorderDetailActivity.class);
-
-                i.putExtra(WORKORDER_ID, order);
-
-                startActivity(i);
-
-            }
-        });
     }
 
     private void addMenu() {
@@ -119,5 +167,10 @@ public class WorkordersActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    public void onRefresh() {
+        attachWorkordersList2();
     }
 }

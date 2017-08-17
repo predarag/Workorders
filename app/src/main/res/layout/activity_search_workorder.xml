@@ -20,7 +20,8 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
 
 
@@ -28,10 +29,10 @@
                 <EditText
                     android:id="@+id/etSearchWorkorder"
                     style="@style/Widget.AppCompat.EditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_search_workorder"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@+id/search_workorder"
                     android:imeActionLabel="@string/action_search_workorder_short"
                     android:inputType="text"
                     android:maxLines="1"
@@ -44,7 +45,7 @@
                 android:id="@+id/btnSearchWorkorder"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:background="?attr/colorPrimary"
-                android:layout_width="match_parent"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_search"
