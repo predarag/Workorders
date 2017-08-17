@@ -80,7 +80,7 @@ public class WorkordersActivity extends AppCompatActivity implements SwipeRefres
         addMenu();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        workordersAdapter = new WorkordersAdapter(workorders);
+        workordersAdapter = new WorkordersAdapter(workorders,this);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
