@@ -26,6 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.entity.SerbianAddressObject;
+import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.ws.impl.SerbianAddressServiceImpl;
 
 public class TotalTvActivationActivity extends AppCompatActivity  {
@@ -122,13 +123,8 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
                     Log.i("communities", response.code()+"");
                     Log.i("communities", response.errorBody()+"");
                     showProgress(false);
-                    try {
-                        Toast.makeText(TotalTvActivationActivity.this,response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.e("communities",e.getMessage());
-                        showProgress(false);
-                        e.printStackTrace();
-                    }
+                    Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
+
                 }
                 else{
                     HashMap<String, String> communities = response.body();
@@ -152,7 +148,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
             @Override
             public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                 showProgress(false);
-                Toast.makeText(TotalTvActivationActivity.this,"Doslo je do greske: "+t.getMessage(),Toast.LENGTH_LONG).show();
+                Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
                 Log.e("communities",t.getMessage());
             }
         });
@@ -181,13 +177,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
 
                     showProgress(false);
 
-                    try {
-                        Toast.makeText(TotalTvActivationActivity.this,response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        showProgress(false);
-                        Log.e("communities",e.getMessage());
-                        e.printStackTrace();
-                    }
+                    Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
                 }
                 else{
                     HashMap<String, String> communities = response.body();
@@ -209,6 +199,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
             @Override
             public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                 showProgress(false);
+                Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
                 Log.e("settelemt",t.getMessage());
             }
         });
@@ -236,13 +227,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
 
                     showProgress(false);
 
-                    try {
-                        Toast.makeText(TotalTvActivationActivity.this,response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.e("streets",e.getMessage());
-                        showProgress(false);
-                        e.printStackTrace();
-                    }
+                    Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
                 }
                 else{
                     HashMap<String, String> communities = response.body();
@@ -265,6 +250,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
             public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                 Log.e("streets",t.getMessage());
                 showProgress(false);
+                Utils.showDialog(TotalTvActivationActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom, pokusajte ponovo!");
             }
         });
     }

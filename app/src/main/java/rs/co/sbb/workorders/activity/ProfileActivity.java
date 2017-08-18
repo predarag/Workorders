@@ -113,8 +113,8 @@ public class ProfileActivity extends AppCompatActivity {
     public void showDialog(Context context, String title, String message){
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
 
-        dlgAlert.setMessage(title);
-        dlgAlert.setTitle(message);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
 
         dlgAlert.setPositiveButton("Da",
                 new DialogInterface.OnClickListener() {

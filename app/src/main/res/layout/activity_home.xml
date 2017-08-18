@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="?attr/colorPrimary"
+                android:onClick="openOcrView"
                 android:text="Pregled Akcija" />
 
         </LinearLayout>
