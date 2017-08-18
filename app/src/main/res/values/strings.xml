@@ -21,6 +21,7 @@
     <string name="error_user_not_exist">Korisnik nije aktivan</string>
 
 
+
     <!-- Title strings -->
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Početna</string>
@@ -52,19 +53,12 @@
         <item>Capture new photo</item>
     </string-array>
 
-    <!-- OCR -->
+    <string name="next">Dalje</string>
+    <string name="prev">Prethodno</string>
+    <string name="finish">Završi</string>
+    <string name="submit_confirm_message">Da li ste sigurni da želite da pošaljete radni zadatak.</string>
+    <string name="submit_confirm_button">OK</string>
 
-    <string name="ok">OK</string>
-    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
-    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
-    <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
-    <string name="ocr_header">Click &quot;Detect Text&quot; to detect text</string>
-    <string name="read_text">Detect Text</string>
-    <string name="auto_focus">Auto Focus</string>
-    <string name="use_flash">Use Flash</string>
-    <string name="ocr_success">Text read successfully</string>
-    <string name="ocr_failure">No text captured</string>
-    <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="scan">Scan</string>
 
 </resources>
