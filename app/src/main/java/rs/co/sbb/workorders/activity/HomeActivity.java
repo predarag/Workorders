@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void openTotalTvActivation(View view){
 
-        Intent intentTotalTvActivation = new Intent(HomeActivity.this,TotalTvActivationActivity.class);
+        Intent intentTotalTvActivation = new Intent(HomeActivity.this,WizardActivity.class);
         startActivity(intentTotalTvActivation);
 
     }

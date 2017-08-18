@@ -53,4 +53,10 @@
         <item>Capture new photo</item>
     </string-array>
 
+    <string name="next">Dalje</string>
+    <string name="prev">Prethodno</string>
+    <string name="finish">Završi</string>
+    <string name="submit_confirm_message">Da li ste sigurni da želite da pošaljete radni zadatak.</string>
+    <string name="submit_confirm_button">OK</string>
+
 </resources>
