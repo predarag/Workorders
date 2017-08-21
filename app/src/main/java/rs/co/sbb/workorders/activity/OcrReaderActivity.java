@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,21 +26,47 @@ public class OcrReaderActivity extends AppCompatActivity implements View.OnClick
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "OcrReaderActivity";
 
+    private EditText etMac;
+    private EditText etSerial;
+    private EditText etMtaMac;
+
+    private String clickType = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ocr_reader);
 
  ;
-        textValue = (TextView) findViewById(R.id.text_value);
+        //textValue = (TextView) findViewById(R.id.text_value);
+        etMac = (EditText) findViewById(R.id.etMac);
+        etSerial = (EditText) findViewById(R.id.etSerial);
+        etMtaMac = (EditText) findViewById(R.id.etMtaMac);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.read_text) {
+        if (v.getId() == R.id.btnMac) {
 
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.initiateScan();
+            clickType = "mac";
+        }
+
+
+        if (v.getId() == R.id.btnScanSerial) {
+
+            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+            scanIntegrator.initiateScan();
+            clickType = "serial";
+        }
+
+        if (v.getId() == R.id.btnScanMta) {
+
+            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+            scanIntegrator.initiateScan();
+            clickType = "mta";
         }
     }
 
@@ -51,7 +78,13 @@ public class OcrReaderActivity extends AppCompatActivity implements View.OnClick
             String scanContent = scanningResult.getContents();
             String scanFormat = scanningResult.getFormatName();
             //formatTxt.setText("FORMAT: " + scanFormat);
-            textValue.setText("CONTENT: " + scanContent);
+            //formatTxt.setText("FORMAT: " + scanFormat);
+            if(clickType.equals("mac"))
+                etMac.setText(scanContent);
+            if(clickType.equals("serial"))
+                etSerial.setText(scanContent);
+            if(clickType.equals("mta"))
+                etMtaMac.setText(scanContent);
         }
         else{
             Toast toast = Toast.makeText(getApplicationContext(),
