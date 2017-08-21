@@ -99,9 +99,6 @@ public class TTVPlacesStepOneFragment extends Fragment {
         }
 //        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-//        rootView.getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-
         activateTotalTvForm = (View) rootView.findViewById(R.id.total_tv_activation_form);
         progressView = (View) rootView.findViewById(R.id.total_tv_activation_progress);
 

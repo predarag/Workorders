@@ -2,12 +2,14 @@ package rs.co.sbb.workorders.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -52,6 +54,8 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wizard_holder_activity);
 
+        getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+
         // TODO detect which fragments to get - TTV or WO
 
         mWizardModel = new TTVWizardModel(this);
@@ -80,10 +84,10 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
                     }
                 });
 
-        mNextButton = (Button) findViewById(R.id.next_button);
         mPrevButton = (Button) findViewById(R.id.prev_button);
+        mNextButton = (Button) findViewById(R.id.next_button);
 
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mStepPagerStrip.setCurrentPage(position);
@@ -98,10 +102,26 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             }
         });
 
+               /* setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mStepPagerStrip.setCurrentPage(position);
+
+                if (mConsumePageSelectedEvent) {
+                    mConsumePageSelectedEvent = false;
+                    return;
+                }
+
+                mEditingAfterReview = false;
+                updateBottomBar();
+            }
+        });*/
+
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
+                    /* TODO .show dialog throws exception */
                     Utils.showDialogQ(getApplicationContext(), "Work order wizard - dialog", "Da li ste sigurni da želite da pošaljete radni zadatak.");
 
                     /*DialogFragment dg = new DialogFragment() {
@@ -184,7 +204,12 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         if (position == mCurrentPageSequence.size()) {
             mNextButton.setText(R.string.finish);
             mNextButton.setBackgroundResource(R.drawable.finish_background);
-            mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+//            mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+            } else {
+                mNextButton.setTextAppearance(R.style.TextAppearanceFinish);
+            }
         } else {
             mNextButton.setText(mEditingAfterReview ? R.string.review
                     : R.string.next);
@@ -193,9 +218,15 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             TypedValue v = new TypedValue();
             getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v,
                     true);
-            mNextButton.setTextAppearance(this, v.resourceId);
+//            mNextButton.setTextAppearance(this, v.resourceId);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                mNextButton.setTextAppearance(this, v.resourceId);
+            } else {
+                mNextButton.setTextAppearance(v.resourceId);
+            }
             mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
         }
+        mPrevButton.setText(R.string.prev);
         mPrevButton
                 .setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
     }

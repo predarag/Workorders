@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 import rs.co.sbb.workorders.R;
+import rs.co.sbb.workorders.activity.HomeActivity;
+import rs.co.sbb.workorders.activity.LoginActivity;
+import rs.co.sbb.workorders.activity.ProfileActivity;
+import rs.co.sbb.workorders.activity.WizardActivity;
 import rs.co.sbb.workorders.entity.User;
 
 /**
@@ -86,27 +91,30 @@ public class Utils {
                 });
     }
 
-    public static void showDialogQ(Context context, String title, String message){
+    public static void showDialogQ(final Context context, String title, String message){
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
 
         dlgAlert.setMessage(title);
         dlgAlert.setTitle(message);
-        dlgAlert.setPositiveButton("Cancel", null);
-        dlgAlert.setPositiveButton("OK", null);
+
+        dlgAlert.setPositiveButton("Da",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(context,HomeActivity.class);
+                        context.startActivity(i);
+                    }
+                });
+
+        dlgAlert.setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
         dlgAlert.setCancelable(true);
         dlgAlert.create().show();
 
-        dlgAlert.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        dlgAlert.setPositiveButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
     }
 
 

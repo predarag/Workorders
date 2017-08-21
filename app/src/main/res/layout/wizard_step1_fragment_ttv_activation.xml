@@ -29,7 +29,45 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="Ime:"
+                android:layout_marginBottom="5dp"/>
 
+            <EditText
+                android:id="@+id/editTextInputFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="Prezime:"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/editTextInputLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="JMBG:"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/editTextInputJMBG"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="13"/>
 
             <TextView
                 android:layout_width="fill_parent"
@@ -37,7 +75,6 @@
                 android:layout_marginTop="10dip"
                 android:text="Opština:"
                 android:layout_marginBottom="5dp"/>
-
 
             <Spinner
                 android:id="@+id/spinnerCommunities"
@@ -74,6 +111,32 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:visibility="visible" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="Kućni broj:"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/editTextInputHouseNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="Podbroj:"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/editTextInputHouseNo2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
 
         </LinearLayout>
     </ScrollView>
