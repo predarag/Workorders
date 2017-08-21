@@ -60,5 +60,8 @@
     <string name="submit_confirm_button">OK</string>
 
     <string name="scan">Scan</string>
+    <string name="read_text">MAC</string>
+    <string name="read_serial">SERIAL</string>
+    <string name="read_mta">MTA MAC</string>
 
 </resources>
