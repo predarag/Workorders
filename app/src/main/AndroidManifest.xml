@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -50,7 +53,7 @@
         </activity>
         WizardActivity
 
-        <!-- [START ]SERVICES  -->
+        <!-- [START ]SERVICES -->
 
         <service
             android:name=".service.FirebaseMessagingService"
@@ -67,7 +70,9 @@
             </intent-filter>
         </service>
 
-        <!-- [END]SERVICES  -->
+        <!-- [END]SERVICES -->
+
+        <activity android:name=".activity.OcrReaderActivity"></activity>
 
     </application>
 

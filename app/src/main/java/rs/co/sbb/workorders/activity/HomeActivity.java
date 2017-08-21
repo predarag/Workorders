@@ -84,4 +84,10 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intentTotalTvActivation);
 
     }
+
+    public void openOcrView(View view){
+        Intent ocrIntent = new Intent(HomeActivity.this,OcrReaderActivity.class);
+        startActivity(ocrIntent);
+    }
+
 }
