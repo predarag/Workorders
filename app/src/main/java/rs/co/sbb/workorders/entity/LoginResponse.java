@@ -3,9 +3,7 @@ package rs.co.sbb.workorders.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Predrag.Tasic on 8/15/2017.
- */
+
 
 public class LoginResponse {
 
@@ -18,6 +16,10 @@ public class LoginResponse {
     @SerializedName("User")
     @Expose
     private User user;
+    @SerializedName("sessionToken")
+    @Expose
+    private String sessionToken;
+
 
     public String getStatus() {
         return status;
@@ -43,6 +45,14 @@ public class LoginResponse {
         this.user = user;
     }
 
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
@@ -51,5 +61,7 @@ public class LoginResponse {
 
                 '}';
     }
+
+
 }
 

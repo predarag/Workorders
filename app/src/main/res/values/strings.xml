@@ -22,7 +22,9 @@
     <string name="error_incorrect_password">Neispravna šifra</string>
     <string name="error_field_required">Obavezno polje</string>
     <string name="error_user_not_exist">Korisnik nije aktivan</string>
-
+    <string name="error_server">Došlo je do greške prilikom povezivanja sa serverom. pokušajte ponovo.</string>
+    <string name="error_general">Došlo je do greške!</string>
+    <string name="error">Greška</string>
 
 
     <!-- Title strings -->
@@ -40,24 +42,25 @@
     <string name="profile_last_name">Prezime</string>
     <string name="profile_email">Email</string>
     <string name="profile_phone">Telefon</string>
+    <string name="profile_logout_message">Da li ste sigurni da zelite da se odjavite?</string>
 
     <!-- Wizard button strings -->
-    <string name="action_previous">Prethodni</string>
-    <string name="action_next">Sledeći</string>
-    <string name="action_finish">Završi</string>
+    <string name="action_previous">Back</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
 
     <!-- wizard pager-->
-    <string name="review">Pregled</string>
-    <string name="geo_status_searching">Čekanje na GPS signal&#8230;</string>
-    <string name="geo_status_found">Lokacija pronadjena</string>
+    <string name="review">Review</string>
+    <string name="geo_status_searching">Waiting GPS &#8230;</string>
+    <string name="geo_status_found">Location found</string>
     <string name="geo_status_location">%1$s \n(%2$s)</string>
     <string-array name="image_photo_sources">
-        <item>Izaberite iz galerije</item>
-        <item>Fotografiši</item>
+        <item>Pick from gallery</item>
+        <item>Capture new photo</item>
     </string-array>
 
     <string name="next">Dalje</string>
-    <string name="prev">Prethodni</string>
+    <string name="prev">Prethodno</string>
     <string name="finish">Završi</string>
     <string name="submit_confirm_message">Da li ste sigurni da želite da pošaljete radni zadatak.</string>
     <string name="submit_confirm_button">OK</string>
@@ -66,6 +69,7 @@
     <string name="read_text">MAC</string>
     <string name="read_serial">SERIAL</string>
     <string name="read_mta">MTA MAC</string>
+
 
 
 </resources>
