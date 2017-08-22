@@ -13,9 +13,7 @@ import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rs.co.sbb.workorders.entity.TokenResponse;
 import rs.co.sbb.workorders.ws.SerbianAddressService;
-import rs.co.sbb.workorders.ws.TokenService;
 import rs.co.sbb.workorders.ws.config.SerbianAddresConfig;
 
 /**

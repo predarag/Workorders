@@ -4,19 +4,16 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,19 +21,17 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.io.IOException;
-
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
+import rs.co.sbb.workorders.activity.enums.EStatusCode;
+import rs.co.sbb.workorders.activity.enums.EUserStatus;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
 import rs.co.sbb.workorders.utils.SaveSharedPreference;
 import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
-import rs.co.sbb.workorders.ws.impl.TokenServiceImpl;
 
 
 public class LoginActivity extends AppCompatActivity  {
@@ -48,6 +43,8 @@ public class LoginActivity extends AppCompatActivity  {
     private View mProgressView;
     private View mLoginFormView;
 
+    private static final String TAG = "LOGIN";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +55,8 @@ public class LoginActivity extends AppCompatActivity  {
 
 
         mPasswordView = (EditText) findViewById(R.id.password);
-       /* mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
-        if(null != SaveSharedPreference.getUser(this) && !SaveSharedPreference.getUser(this).equals("")){
+        if(null != SaveSharedPreference.getSessionToken(this) && !SaveSharedPreference.getSessionToken(this).equals("")){
             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             LoginActivity.this.startActivity(i);
         }
@@ -90,22 +77,22 @@ public class LoginActivity extends AppCompatActivity  {
 
         Toast.makeText(this, Utils.getIPAddress(true),Toast.LENGTH_LONG).show();
 
-        Log.i("TAG", "SERIAL: " + Build.SERIAL);
-        Log.i("TAG","MODEL: " + Build.MODEL);
-        Log.i("TAG","ID: " + Build.ID);
-        Log.i("TAG","Manufacture: " + Build.MANUFACTURER);
-        Log.i("TAG","brand: " + Build.BRAND);
-        Log.i("TAG","type: " + Build.TYPE);
-        Log.i("TAG","user: " + Build.USER);
-        Log.i("TAG","BASE: " + Build.VERSION_CODES.BASE);
-        Log.i("TAG","INCREMENTAL " + Build.VERSION.INCREMENTAL);
-        Log.i("TAG","SDK  " + Build.VERSION.SDK);
-        Log.i("TAG","BOARD: " + Build.BOARD);
-        Log.i("TAG","BRAND " + Build.BRAND);
-        Log.i("TAG","HOST " + Build.HOST);
-        Log.i("TAG","FINGERPRINT: "+Build.FINGERPRINT);
-        Log.i("TAG","Version Code: " + Build.VERSION.RELEASE);
-        Log.i("TAG","HARDWARE: " + Build.HARDWARE);
+        Log.i(TAG, "SERIAL: " + Build.SERIAL);
+        Log.i(TAG,"MODEL: " + Build.MODEL);
+        Log.i(TAG,"ID: " + Build.ID);
+        Log.i(TAG,"Manufacture: " + Build.MANUFACTURER);
+        Log.i(TAG,"brand: " + Build.BRAND);
+        Log.i(TAG,"type: " + Build.TYPE);
+        Log.i(TAG,"user: " + Build.USER);
+        Log.i(TAG,"BASE: " + Build.VERSION_CODES.BASE);
+        Log.i(TAG,"INCREMENTAL " + Build.VERSION.INCREMENTAL);
+        Log.i(TAG,"SDK  " + Build.VERSION.SDK);
+        Log.i(TAG,"BOARD: " + Build.BOARD);
+        Log.i(TAG,"BRAND " + Build.BRAND);
+        Log.i(TAG,"HOST " + Build.HOST);
+        Log.i(TAG,"FINGERPRINT: "+Build.FINGERPRINT);
+        Log.i(TAG,"Version Code: " + Build.VERSION.RELEASE);
+        Log.i(TAG,"HARDWARE: " + Build.HARDWARE);
 
 
     }
@@ -113,7 +100,6 @@ public class LoginActivity extends AppCompatActivity  {
     @Override
     protected void onResume(){
         super.onResume();
-        //checkPlayServices();
     }
 
 
@@ -149,37 +135,12 @@ public class LoginActivity extends AppCompatActivity  {
 
             showProgress(true);
 
-            TokenServiceImpl tokenService = new TokenServiceImpl();
-
             String token = FirebaseInstanceId.getInstance().getToken();
-            Log.i("LOGIN",token);
+            Log.i(TAG,token == null ? "" : token);
+            Utils.setNotificationToken(username,token);
 
             login(username,password,focusView);
 
-            /*Intent i = new Intent(LoginActivity.this,HomeActivity.class);
-            LoginActivity.this.startActivity(i);*/
-            //finish();
-           /* if(null != token && !token.equals("")) {
-
-                Call<TokenResponse> call = tokenService.token(username,token);
-                call.enqueue(new Callback<TokenResponse>() {
-                    @Override
-                    public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
-                        showProgress(false);
-                        Intent i = new Intent(LoginActivity.this,MainActivity.class);
-                        LoginActivity.this.startActivity(i);
-                        Log.i("LOGIN","OK");
-                        //finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<TokenResponse> call, Throwable t) {
-                        Log.i("LOGIN","ERROR"+t.getMessage());
-                        showProgress(false);
-                    }
-                });
-
-            }*/
 
         }
     }
@@ -241,39 +202,48 @@ public class LoginActivity extends AppCompatActivity  {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
                 if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.i("login", response.code()+"");
-                    Log.i("login", response.errorBody()+"");
+                    Log.i(TAG, response.code()+"");
+                    Log.i(TAG, response.errorBody()+"");
 
                     showProgress(false);
-                    Utils.showDialog(LoginActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom. Pokušajte ponovo!");
+                    Snackbar.make(LoginActivity.this.mLoginFormView,getString(R.string.error_server),Snackbar.LENGTH_LONG).show();
+                    //Utils.showDialog(LoginActivity.this,getString(R.string.error),getString(R.string.error_server));
                                     }
                 else{
                     LoginResponse loginResponse = response.body();
-                    Log.i("login",loginResponse.toString());
+                    Log.i(TAG,loginResponse.toString());
                     showProgress(false);
                     View view = null;
-                    if(null != loginResponse.getStatus() && !loginResponse.getStatus().equals("OK")){
+                    if(null != loginResponse.getStatus() && !loginResponse.getStatus().equals(EStatusCode.OK.value())){
                         if(null!= loginResponse.getStatusMessage()){
                             switch (loginResponse.getStatusMessage()) {
                                 case "User is not active":
-                                    //mPasswordView.setError("Korisnik nije aktivan");
-                                    Utils.showDialog(LoginActivity.this,"",getString(R.string.error_user_not_exist));
 
+                                    //Utils.showDialog(LoginActivity.this,"",getString(R.string.error_user_not_exist));
+                                    Snackbar.make(LoginActivity.this.mLoginFormView,getString(R.string.error_user_not_exist),Snackbar.LENGTH_LONG).show();
                                     break;
                                 case "User doesn't exist":
-                                    //mPasswordView.setError("Neispravno korisnicko ime ili lozinka");
-                                    //view = mPasswordView;
-                                    Utils.showDialog(LoginActivity.this,"",getString(R.string.error_invalid_username_password));
+
+                                    //Utils.showDialog(LoginActivity.this,"",getString(R.string.error_invalid_username_password));
+                                    Snackbar.make(LoginActivity.this.mLoginFormView,getString(R.string.error_invalid_username_password),Snackbar.LENGTH_LONG).show();
                                     break;
                             }
                         }
                     }
 
                     else{
-                        if(loginResponse.getUser().getIsActive().equals("1")){
+                        if(loginResponse.getUser().getIsActive().equals(EUserStatus.ACTIVE.getStatus())){
                             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
                             LoginActivity.this.startActivity(i);
-                            Utils.setUserPreference(LoginActivity.this,loginResponse.getUser());
+
+                            String sessionToken = "";
+
+                            if(null != loginResponse.getSessionToken() && !loginResponse.getSessionToken().equals("")){
+                                sessionToken = loginResponse.getSessionToken();
+                                Log.i(TAG,"SESSION_TOKEN: "+sessionToken);
+                                Utils.setUserPreference(LoginActivity.this,loginResponse.getUser(),sessionToken);
+                            }
+
                         }
                     }
 
@@ -284,8 +254,9 @@ public class LoginActivity extends AppCompatActivity  {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 showProgress(false);
-                Log.i("login",t.getMessage());
-                Utils.showDialog(LoginActivity.this,"Greška","Došlo je do greške prilikom povezivanja sa serverom. Pokušajte ponovo!");
+                Log.i(TAG,t.getMessage());
+                Snackbar.make(LoginActivity.this.mLoginFormView,getString(R.string.error_server),Snackbar.LENGTH_LONG).show();
+                //Utils.showDialog(LoginActivity.this,getString(R.string.error),getString(R.string.error_server));
                 t.printStackTrace();
 
             }

@@ -13,6 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
+import rs.co.sbb.workorders.entity.NotificationTokenRequest;
 import rs.co.sbb.workorders.ws.ExternalAuthService;
 import rs.co.sbb.workorders.ws.config.ExternalAuthConfig;
 
@@ -48,6 +49,21 @@ public class ExternalAuthServiceImpl {
         ExternalAuthService service = retrofit.create(ExternalAuthService.class);
 
         return  service.login(request);
+    }
+
+    public Call<rs.co.sbb.workorders.entity.Response> logout(LoginRequest request){
+
+        ExternalAuthService service = retrofit.create(ExternalAuthService.class);
+
+        return  service.logout(request);
+    }
+
+    public Call<rs.co.sbb.workorders.entity.Response> setNotificationToken(NotificationTokenRequest request){
+
+        ExternalAuthService service = retrofit.create(ExternalAuthService.class);
+
+        return  service.setNotificationToken(request);
+
     }
 
 }

@@ -16,6 +16,7 @@ public class SaveSharedPreference {
     private static final String LASTNAME = "LASTNAME";
     private static final String EMAIL = "EMAIL";
     private static final String PHONE = "PHONE";
+    private static final String SESSION_TOKEN = "SESSION_TOKEN";
 
 
     public static SharedPreferences getSharedPrederences(Context context){
@@ -81,6 +82,16 @@ public class SaveSharedPreference {
 
     public static String getPHONE(Context context) {
         return getSharedPrederences(context).getString(PHONE,"");
+    }
+
+    public static void setSessionToken(Context context, String sessionToken){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(SESSION_TOKEN,sessionToken);
+        editor.commit();
+    }
+
+    public static String getSessionToken(Context context){
+        return  getSharedPrederences(context).getString(SESSION_TOKEN,"");
     }
 
 }

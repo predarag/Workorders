@@ -5,6 +5,8 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
+import rs.co.sbb.workorders.entity.NotificationTokenRequest;
+import rs.co.sbb.workorders.entity.Response;
 
 /**
  * Created by Predrag.Tasic on 8/15/2017.
@@ -13,6 +15,12 @@ import rs.co.sbb.workorders.entity.LoginResponse;
 public interface ExternalAuthService {
 
     @POST("login")
-    public Call<LoginResponse> login(@Body LoginRequest request);
+    Call<LoginResponse> login(@Body LoginRequest request);
+
+    @POST("logout")
+    Call<Response> logout(@Body LoginRequest request);
+
+    @POST("notificationToken")
+    Call<Response> setNotificationToken(@Body NotificationTokenRequest request);
 
 }
