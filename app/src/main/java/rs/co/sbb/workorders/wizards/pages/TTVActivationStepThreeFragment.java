@@ -145,10 +145,9 @@ public class TTVActivationStepThreeFragment extends Fragment {
         if (v.getId() == R.id.btnTTVScanSerial) {
             IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity()); //(Activity) this.getContext()
             scanIntegrator.initiateScan();
-//            startActivityForResult();
+            startActivityForResult(IntentIntegrator.externalIntent, scanIntegrator.REQUEST_CODE);
             clickType = "serial";
         }
-//        super.onActivityResult();
     }
 
 //    @Override

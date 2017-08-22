@@ -17,4 +17,6 @@
 
     <color name="text_light">#66000000</color>
 
+    <color name="text_edit_text">#AED3F4</color>
+
 </resources>

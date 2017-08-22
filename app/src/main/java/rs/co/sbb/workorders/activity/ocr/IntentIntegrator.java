@@ -55,6 +55,9 @@ public class IntentIntegrator {
     private String buttonNo;
     private List<String> targetApplications;
     private final Map<String,Object> moreExtras;
+
+    public static Intent externalIntent;
+
     public IntentIntegrator(Activity activity) {
         this.activity = activity;
         title = DEFAULT_TITLE;
@@ -144,7 +147,8 @@ public class IntentIntegrator {
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         attachMoreExtras(intentScan);
-        startActivityForResult(intentScan, REQUEST_CODE);
+//        startActivityForResult(intentScan, REQUEST_CODE);
+        externalIntent = intentScan;
         return null;
     }
     protected void startActivityForResult(Intent intent, int code) {
@@ -221,6 +225,7 @@ public class IntentIntegrator {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         attachMoreExtras(intent);
         activity.startActivity(intent);
+
         return null;
     }
     private static List<String> list(String... values) {

@@ -76,4 +76,10 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="EditTextInputLayout" parent="@android:style/Theme">
+        <!--<item name="colorAccent">@color/text_light</item>-->
+        <item name="colorAccent">@color/text_edit_text</item>
+    </style>
+
 </resources>
+

@@ -270,21 +270,6 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         mWizardModel.unregisterListener(this);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Fragment ttvStep3Fragment = getSupportFragmentManager().findFragmentByTag("TTVWStepThreeFrag"); /*Id(R.id.ttvStep3Frag);*/
-
-        if (ttvStep3Fragment != null) {
-            Log.i(TAG, "onActivityResult: usao u fragment 3");
-            ttvStep3Fragment.onActivityResult(requestCode, resultCode, data);
-        }
-
-        /*for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }*/
-    }
 
     public class MyPagerAdapter extends FragmentStatePagerAdapter {
         private int mCutOffPage;
