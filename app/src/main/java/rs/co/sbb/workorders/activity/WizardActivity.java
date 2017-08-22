@@ -2,6 +2,7 @@ package rs.co.sbb.workorders.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,16 +13,22 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
 import rs.co.sbb.workorders.R;
+import rs.co.sbb.workorders.activity.ocr.IntentIntegrator;
+import rs.co.sbb.workorders.activity.ocr.IntentResult;
 import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.wizards.model.TTVWizardModel;
+import rs.co.sbb.workorders.wizards.pages.TTVActivationStepThreeFragment;
 import rs.co.sbb.workorders.wizards.wizardpager.model.AbstractWizardModel;
 import rs.co.sbb.workorders.wizards.wizardpager.model.ModelCallbacks;
 import rs.co.sbb.workorders.wizards.wizardpager.model.Page;
@@ -34,6 +41,8 @@ import rs.co.sbb.workorders.wizards.wizardpager.ui.StepPagerStrip;
  */
 
 public class WizardActivity extends AppCompatActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
+
+    private static final String TAG = "WizardActivityTTV";
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
@@ -259,6 +268,22 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
     protected void onDestroy() {
         super.onDestroy();
         mWizardModel.unregisterListener(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Fragment ttvStep3Fragment = getSupportFragmentManager().findFragmentByTag("TTVWStepThreeFrag"); /*Id(R.id.ttvStep3Frag);*/
+
+        if (ttvStep3Fragment != null) {
+            Log.i(TAG, "onActivityResult: usao u fragment 3");
+            ttvStep3Fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
+        /*for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }*/
     }
 
     public class MyPagerAdapter extends FragmentStatePagerAdapter {

@@ -5,6 +5,7 @@
     <string name="prompt_email">Korisničko ime</string>
     <string name="prompt_password">Šifra</string>
     <string name="prompt_search_workorder">Broj radnog naloga</string>
+    <string name="prompt_ttv_ocr_scann">Unesite/Skenirajte serijski broj: </string>
 
     <!-- Actions string -->
     <string name="action_sign_in">Prijava</string>
@@ -12,6 +13,8 @@
     <string name="action_logout">Odjavi se</string>
     <string name="action_search_workorder_short">Broj radnog naloga</string>
     <string name="action_search">Pretraga</string>
+    <string name="action_ttv_ocr_scan">Unesite/Skenirajte serijski broj: </string>
+    <string name="action_ttv_ocr_scan_short">Serijski broj:</string>
 
     <!-- Errors string -->
     <string name="error_invalid_email">Email je neispravan</string>
@@ -63,5 +66,6 @@
     <string name="read_text">MAC</string>
     <string name="read_serial">SERIAL</string>
     <string name="read_mta">MTA MAC</string>
+
 
 </resources>

@@ -39,8 +39,10 @@ public class TTVPlacesStepOnePage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        dest.add(new ReviewItem("Your name", mData.getString(NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Your email", mData.getString(EMAIL_DATA_KEY), getKey(), -1));
+        /*dest.add(new ReviewItem("Your name", mData.getString(NAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Your email", mData.getString(EMAIL_DATA_KEY), getKey(), -1));*/
+
+        // TODO add all items from step1 that can  be eddited
     }
 
     @Override

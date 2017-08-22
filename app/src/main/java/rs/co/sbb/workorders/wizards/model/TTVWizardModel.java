@@ -2,6 +2,8 @@ package rs.co.sbb.workorders.wizards.model;
 
 import android.content.Context;
 
+import rs.co.sbb.workorders.wizards.pages.TTVActivationStepThreePage;
+import rs.co.sbb.workorders.wizards.pages.TTVActivationStepTwoPage;
 import rs.co.sbb.workorders.wizards.pages.TTVPlacesStepOnePage;
 import rs.co.sbb.workorders.wizards.wizardpager.model.AbstractWizardModel;
 import rs.co.sbb.workorders.wizards.wizardpager.model.MultipleFixedChoicePage;
@@ -19,11 +21,13 @@ public class TTVWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new TTVPlacesStepOnePage(this, "Place and address").setRequired(false),
-                new MultipleFixedChoicePage(this, "Test 2").setChoices(
+                new TTVPlacesStepOnePage(this, "Unos korisnika").setRequired(false),
+                /*new MultipleFixedChoicePage(this, "Test 2").setChoices(
                         "Prvi", "Drugi", "Treci", "Cetvrto", "Peti",
-                        "Sesti").setRequired(false),
-                new TextPage(this, "Comments").setRequired(false)
+                        "Sesti").setRequired(false),*/
+                new TTVActivationStepTwoPage(this, "Izbor paketa").setRequired(false),
+//                new TextPage(this, "Comments").setRequired(false)
+                new TTVActivationStepThreePage(this, "Dodavanje opreme")
 
         );
     }

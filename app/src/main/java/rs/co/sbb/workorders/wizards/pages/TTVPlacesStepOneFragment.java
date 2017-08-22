@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
     private static final String ARG_KEY = "key";
 
+    private static final String TAG = "TTVWStepOneFrag";
+
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
     private TTVPlacesStepOnePage mPage;
@@ -79,7 +82,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
@@ -89,13 +92,15 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable  Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wizard_step1_fragment_ttv_activation, container, false);
 
         TextView tv = (TextView) rootView.findViewById(R.id.title);
         if (tv != null) {
             tv.setText(mPage.getTitle());
+        } else {
+            Log.i(TAG, "onCreateView: There is no title.");
         }
 //        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
@@ -161,6 +166,29 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = null;
+        try {
+            if (context instanceof Activity) {
+                activity = (Activity) context;
+            } else {
+                Log.i(TAG, "onAttach: context is not activity?");
+            }
+
+        } catch (TypeNotPresentException ex) {
+
+        }
+
+        if (!(activity instanceof PageFragmentCallbacks)) {
+            throw new ClassCastException("Activity must implement PageFragmentCallbacks");
+        }
+
+        mCallbacks = (PageFragmentCallbacks) activity;
+    }
+
+    /*@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -169,7 +197,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
         }
 
         mCallbacks = (PageFragmentCallbacks) activity;
-    }
+    }*/
 
     @Override
     public void onDetach() {
@@ -252,8 +280,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
             public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
 
                 if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.i("communities", response.code()+"");
-                    Log.i("communities", response.errorBody()+"");
+                    Log.d("communities", response.code()+"");
+                    Log.d("communities", response.errorBody()+"");
                     showProgress(false);
                     try {
                         Toast.makeText(getActivity(),response.errorBody().string(),Toast.LENGTH_LONG).show();
@@ -271,7 +299,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
                         Map.Entry pair = (Map.Entry) it.next();
 
-                        Log.i("communities",pair.getKey()+" "+pair.getValue());
+                        Log.d("communities",pair.getKey()+" "+pair.getValue());
                         communitiesList.add(new SerbianAddressObject(pair.getKey().toString(),
                                 pair.getValue().toString()));
                     }
@@ -309,8 +337,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
             @Override
             public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                 if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.i("getSettlementByCode", response.code()+"");
-                    Log.i("getSettlementByCode", response.errorBody()+"");
+                    Log.d("getSettlementByCode", response.code()+"");
+                    Log.d("getSettlementByCode", response.errorBody()+"");
 
                     showProgress(false);
 
@@ -330,7 +358,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
                         Map.Entry pair = (Map.Entry) it.next();
 
-                        Log.i("settelemt",pair.getKey()+" "+pair.getValue());
+                        Log.d("settelemt",pair.getKey()+" "+pair.getValue());
                         settlmentList.add(new SerbianAddressObject(pair.getKey().toString(),
                                 pair.getValue().toString()));
                     }
@@ -364,8 +392,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
             @Override
             public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                 if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.i("streets", response.code()+"");
-                    Log.i("streets", response.errorBody()+"");
+                    Log.d("streets", response.code()+"");
+                    Log.d("streets", response.errorBody()+"");
 
                     showProgress(false);
 
@@ -385,7 +413,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
                         Map.Entry pair = (Map.Entry) it.next();
 
-                        Log.i("streets",pair.getKey()+" "+pair.getValue());
+                        Log.d("streets",pair.getKey()+" "+pair.getValue());
                         streetList.add(new SerbianAddressObject(pair.getKey().toString(),
                                 pair.getValue().toString()));
                     }
@@ -403,7 +431,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     private void populateCommunitySpinner(List<SerbianAddressObject> communitiesList){
-        ArrayAdapter<SerbianAddressObject> communityAdapter = new ArrayAdapter<SerbianAddressObject>(getActivity(),android.R.layout.simple_spinner_item,communitiesList);
+        ArrayAdapter<SerbianAddressObject> communityAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,communitiesList);
         communityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         communitySpinner.setAdapter(communityAdapter);
@@ -411,7 +439,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     private void populateSettlementSpiner(List<SerbianAddressObject> settlmentList){
-        ArrayAdapter<SerbianAddressObject> settlementAdapter = new ArrayAdapter<SerbianAddressObject>(getActivity(),android.R.layout.simple_spinner_item,settlmentList);
+        ArrayAdapter<SerbianAddressObject> settlementAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,settlmentList);
         settlementAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         settlementSpinner.setAdapter(settlementAdapter);
@@ -420,7 +448,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     private void populateStreetSpiner(List<SerbianAddressObject> settlmentList){
-        ArrayAdapter<SerbianAddressObject> streetAdapter = new ArrayAdapter<SerbianAddressObject>(getActivity(),android.R.layout.simple_spinner_item,streetList);
+        ArrayAdapter<SerbianAddressObject> streetAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,streetList);
         streetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         streetSpinner.setAdapter(streetAdapter);

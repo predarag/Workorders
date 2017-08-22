@@ -5,4 +5,7 @@
     <item type="id" name="wizard_previous_button" />
     <item type="id" name="wizard_next_button" />
 
+    <item type="id" name="labelSerialNumber" />
+    <!--<item type="id" name="button_ocr_scann" />-->
+
 </resources>
