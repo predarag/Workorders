@@ -9,11 +9,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
 import rs.co.sbb.workorders.entity.NotificationTokenRequest;
+import rs.co.sbb.workorders.entity.UserRoles;
 import rs.co.sbb.workorders.ws.ExternalAuthService;
 import rs.co.sbb.workorders.ws.config.ExternalAuthConfig;
 
@@ -65,5 +67,29 @@ public class ExternalAuthServiceImpl {
         return  service.setNotificationToken(request);
 
     }
+
+    public UserRoles getUserRoles(String username){
+
+        ExternalAuthService service = retrofit.create(ExternalAuthService.class);
+
+        UserRoles userRoles = null;
+
+        Call<UserRoles> call = service.getUserRoles(username);
+
+        call.enqueue(new Callback<UserRoles>() {
+            @Override
+            public void onResponse(Call<UserRoles> call, retrofit2.Response<UserRoles> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<UserRoles> call, Throwable t) {
+
+            }
+        });
+
+        return  userRoles;
+
+   }
 
 }
