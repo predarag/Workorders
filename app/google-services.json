@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "706355467434",
-    "firebase_url": "https://workorders-f0c90.firebaseio.com",
-    "project_id": "workorders-f0c90",
-    "storage_bucket": "workorders-f0c90.appspot.com"
+    "project_number": "667712011834",
+    "firebase_url": "https://workorders-ee9e5.firebaseio.com",
+    "project_id": "workorders-ee9e5",
+    "storage_bucket": "workorders-ee9e5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:706355467434:android:06be97d4b63ffb87",
+        "mobilesdk_app_id": "1:667712011834:android:06be97d4b63ffb87",
         "android_client_info": {
           "package_name": "rs.co.sbb.workorders"
         }
       },
       "oauth_client": [
         {
-          "client_id": "706355467434-ptd5bqllkv379co5rv0o6upgg59hvorc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "rs.co.sbb.workorders",
-            "certificate_hash": "fd836cfda2e48b92a866308bc1964889e6400bde"
-          }
-        },
-        {
-          "client_id": "706355467434-899trn84ra0ffon1bc70gk9ass8td7q2.apps.googleusercontent.com",
+          "client_id": "667712011834-2qcljk5pbhafav6jocgjpdrglu6n8nli.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB8GY24OUsn5mxHdc1gb0N6ceiu-t1BwZI"
+          "current_key": "AIzaSyAzJDW8Nx1_r5QO4EU7vJRbZYiHdw6rz3g"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "706355467434-899trn84ra0ffon1bc70gk9ass8td7q2.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
