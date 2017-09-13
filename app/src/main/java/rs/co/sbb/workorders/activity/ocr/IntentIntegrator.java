@@ -25,7 +25,7 @@ import java.util.Map;
 public class IntentIntegrator {
 
     public static final int REQUEST_CODE = 0x0000c0de; // Only use bottom 16 bits
-    private static final String TAG = IntentIntegrator.class.getSimpleName();
+    private static final String TAG = "IntentIntegrator";//IntentIntegrator.class.getSimpleName();
     public static final String DEFAULT_TITLE = "Install Barcode Scanner?";
     public static final String DEFAULT_MESSAGE =
             "This application requires Barcode Scanner. Would you like to install it?";
@@ -141,6 +141,7 @@ public class IntentIntegrator {
         }
         String targetAppPackage = findTargetAppPackage(intentScan);
         if (targetAppPackage == null) {
+            Log.i(TAG,"targetAppPackage == null");
             return showDownloadDialog();
         }
         intentScan.setPackage(targetAppPackage);
@@ -155,6 +156,7 @@ public class IntentIntegrator {
         activity.startActivityForResult(intent, code);
     }
     private String findTargetAppPackage(Intent intent) {
+        Log.i(TAG,"findTargetAppPackage");
         PackageManager pm = activity.getPackageManager();
         List<ResolveInfo> availableApps = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (availableApps != null) {
@@ -168,6 +170,7 @@ public class IntentIntegrator {
         return null;
     }
     private AlertDialog showDownloadDialog() {
+        Log.i(TAG,"showDownloadDialog");
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(activity);
         downloadDialog.setTitle(title);
         downloadDialog.setMessage(message);

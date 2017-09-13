@@ -1,10 +1,15 @@
 package rs.co.sbb.workorders.activity;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -12,8 +17,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,14 +30,22 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.activity.enums.EStatusCode;
-import rs.co.sbb.workorders.activity.enums.EUserStatus;
+import rs.co.sbb.workorders.entity.CompanyCode;
+import rs.co.sbb.workorders.enums.EStatusCode;
+import rs.co.sbb.workorders.enums.EUserStatus;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.LoginResponse;
+import rs.co.sbb.workorders.helper.PermissionHelper;
 import rs.co.sbb.workorders.utils.SaveSharedPreference;
 import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
@@ -42,6 +59,7 @@ public class LoginActivity extends AppCompatActivity  {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private AutoCompleteTextView tvLoginCompanyPicker;
 
     private static final String TAG = "LOGIN";
 
@@ -53,12 +71,58 @@ public class LoginActivity extends AppCompatActivity  {
         // Set up the login form.
         mUsernameView = (TextView) findViewById(R.id.username);
 
+        PermissionHelper permissionHelper = new PermissionHelper(this);
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionHelper.showPhoneStatePermission();
+        }
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        tvLoginCompanyPicker = (AutoCompleteTextView) findViewById(R.id.tvLoginCompanyPicker);
+
+        tvLoginCompanyPicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tvLoginCompanyPicker.showDropDown();
+                tvLoginCompanyPicker.requestFocus();
+                return false;
+            }
+        });
+
+        tvLoginCompanyPicker.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CompanyCode country = (CompanyCode) parent.getAdapter().getItem(position);
+
+                if(country.getCode().equals("SI")){
+                    Locale locale = new Locale("si");
+                    Locale.setDefault(locale);
+                    Configuration config = new Configuration();
+                    config.locale = locale;
+                    getBaseContext().getResources().updateConfiguration(config,getBaseContext().getResources().getDisplayMetrics());
+                }
+                else{
+                    Locale locale = new Locale("");
+                    Locale.setDefault(locale);
+                    Configuration config = new Configuration();
+                    config.locale = locale;
+                    getBaseContext().getResources().updateConfiguration(config,getBaseContext().getResources().getDisplayMetrics());
+                }
+                SaveSharedPreference.setCountryCode(LoginActivity.this,country.getCode());
+
+            }
+        });
+
+        ArrayAdapter<CompanyCode> companyPickerAdapter = new ArrayAdapter<CompanyCode>(this,android.R.layout.simple_dropdown_item_1line,getCompanyCodes());
+
+        tvLoginCompanyPicker.setAdapter(companyPickerAdapter);
 
         if(null != SaveSharedPreference.getSessionToken(this) && !SaveSharedPreference.getSessionToken(this).equals("")){
             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             LoginActivity.this.startActivity(i);
+            finish();
+            return;
         }
         else{
             attemptLogin();
@@ -96,6 +160,7 @@ public class LoginActivity extends AppCompatActivity  {
 
 
     }
+
 
     @Override
     protected void onResume(){
@@ -269,5 +334,22 @@ public class LoginActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
     }
+
+    private List<CompanyCode> getCompanyCodes(){
+
+        List<CompanyCode> countrys = new ArrayList<>();
+
+        for(Map.Entry<String,String> codes : Utils.getCountryCodes().entrySet()){
+
+            String code = codes.getKey();
+            String name = codes.getValue();
+
+            countrys.add(new CompanyCode(code,name));
+
+        }
+
+        return countrys;
+    }
+
 }
 

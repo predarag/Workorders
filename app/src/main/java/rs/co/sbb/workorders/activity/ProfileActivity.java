@@ -24,10 +24,11 @@ import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.activity.enums.EStatusCode;
+import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.entity.LoginRequest;
 import rs.co.sbb.workorders.entity.Response;
 import rs.co.sbb.workorders.helper.BottomNavigationViewHelper;
+import rs.co.sbb.workorders.service.LocationService;
 import rs.co.sbb.workorders.utils.SaveSharedPreference;
 import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
@@ -81,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         addMenu();
 
-        etFirstName = (EditText) findViewById(R.id.etFirstName);
+        etFirstName = (EditText) findViewById(R.id.etTtvFirstName);
         etLastName =  (EditText) findViewById(R.id.etLastName);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPhoneNumber = (EditText) findViewById(R.id.etPhone);
@@ -180,6 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
                             deleteNotificationToken();
                             Utils.deleteUserPreference(ProfileActivity.this);
                             Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+                            stopService(new Intent(ProfileActivity.this, LocationService.class));
                             startActivity(i);
                         } else {
                             Snackbar.make(view, getString(R.string.error_general), Snackbar.LENGTH_LONG).show();

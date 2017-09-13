@@ -15,6 +15,9 @@ import rs.co.sbb.workorders.wizards.wizardpager.model.ReviewItem;
 public class TTVActivationStepTwoPage extends Page {
 
 
+    public static final String PRODUCT_PACKAGE_DATA_KEY = "PRODUCT_PACKAGE_DATA_KEY";
+    public static final String BILLING_PRODUCTS_DATA_KEY = "BILLING_PRODUCTS_DATA_KEY";
+    public static final String PACKAGE_OPTION_DATA_KEY = "PACKAGE_OPTION_DATA_KEY";
 
     public TTVActivationStepTwoPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);
@@ -27,6 +30,7 @@ public class TTVActivationStepTwoPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        // TODO add all item from step2
+        dest.add(new ReviewItem("Paket", mData.getString(PRODUCT_PACKAGE_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Opcija", mData.getString(PACKAGE_OPTION_DATA_KEY), getKey(), -1));
     }
 }

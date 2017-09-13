@@ -35,6 +35,13 @@ public class User {
     @SerializedName("isActive")
     @Expose
     private String isActive;
+    @Expose
+    @SerializedName("sapTeamId")
+    private String sapTeamId;
+    @Expose
+    @SerializedName("teamUniqueId")
+    private String teamUniqueId;
+
 
     public String getId() {
         return id;
@@ -121,5 +128,21 @@ public class User {
                 ", companyName='" + companyName + '\'' +
                 ", isActive='" + isActive + '\'' +
                 '}';
+    }
+
+    public String getSapTeamId() {
+        return sapTeamId;
+    }
+
+    public void setSapTeamId(String sapTeamId) {
+        this.sapTeamId = sapTeamId;
+    }
+
+    public String getTeamUniqueId() {
+        return teamUniqueId;
+    }
+
+    public void setTeamUniqueId(String teamUniqueId) {
+        this.teamUniqueId = teamUniqueId;
     }
 }

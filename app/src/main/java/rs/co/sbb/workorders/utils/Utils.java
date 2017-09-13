@@ -1,36 +1,24 @@
 package rs.co.sbb.workorders.utils;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.activity.HomeActivity;
-import rs.co.sbb.workorders.activity.ProfileActivity;
-import rs.co.sbb.workorders.activity.WizardActivity;
-import rs.co.sbb.workorders.activity.LoginActivity;
-import rs.co.sbb.workorders.activity.enums.EStatusCode;
-import rs.co.sbb.workorders.entity.LoginResponse;
+import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.entity.NotificationTokenRequest;
 import rs.co.sbb.workorders.entity.Response;
 import rs.co.sbb.workorders.entity.User;
-import rs.co.sbb.workorders.ws.ExternalAuthService;
 import rs.co.sbb.workorders.ws.impl.ExternalAuthServiceImpl;
 
 /**
@@ -74,6 +62,8 @@ public class Utils {
         SaveSharedPreference.setEmail(context,user.getEmail());
         SaveSharedPreference.setPhone(context,user.getPhoneNumber());
         SaveSharedPreference.setSessionToken(context,sessionToken);
+        SaveSharedPreference.setSapTeamId(context, user.getSapTeamId());
+        SaveSharedPreference.setTeamUniqueId(context,user.getTeamUniqueId());
     }
 
 
@@ -84,13 +74,22 @@ public class Utils {
         SaveSharedPreference.setEmail(context,null);
         SaveSharedPreference.setPhone(context,null);
         SaveSharedPreference.setSessionToken(context,null);
+        SaveSharedPreference.setSapTeamId(context, null);
+        SaveSharedPreference.setTeamUniqueId(context,null);
+        SaveSharedPreference.setCountryCode(context,null);
+    }
+
+    public static void deleteNotificationPreference(Context context){
+        SaveSharedPreference.setNotificationCotract(context,null);
+        SaveSharedPreference.setNotificationPartner(context,null);
+        SaveSharedPreference.setNotificationTime(context,null);
     }
 
     public static void showDialog(Context context, String title, String message){
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
 
-        dlgAlert.setMessage(title);
-        dlgAlert.setTitle(message);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
         dlgAlert.setPositiveButton("OK", null);
         dlgAlert.setCancelable(true);
         dlgAlert.create().show();
@@ -106,8 +105,8 @@ public class Utils {
     public static void showDialogQ(final Context context, String title, String message){
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
 
-        dlgAlert.setMessage(title);
-        dlgAlert.setTitle(message);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
 
         dlgAlert.setPositiveButton("Da",
                 new DialogInterface.OnClickListener() {
@@ -171,6 +170,20 @@ public class Utils {
         }
 
 
+
+    }
+
+
+    public static HashMap<String,String> getCountryCodes(){
+
+        HashMap<String, String> countries =  new HashMap<>();
+
+        countries.put("RS","SBB");
+        countries.put("SI","TELEMACH SI");
+        countries.put("BH","TELEMACH BH");
+        countries.put("CG","TELEMACH CG");
+
+        return countries;
 
     }
 

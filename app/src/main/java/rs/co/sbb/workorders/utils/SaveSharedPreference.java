@@ -17,6 +17,13 @@ public class SaveSharedPreference {
     private static final String EMAIL = "EMAIL";
     private static final String PHONE = "PHONE";
     private static final String SESSION_TOKEN = "SESSION_TOKEN";
+    private static final String SAP_TEAM_ID = "SAP_TEAM_ID";
+    private static final String TEAM_UNIQUE_ID = "TEAM_UNIQUE_ID";
+    private static final String COUNTRY_CODE = "COUNTRY_CODE";
+
+    private static final String NOTIFICATION_COTRACT = "NOTIFICATION_COTRACT";
+    private static final String NOTIFICATION_PARTNER = "NOTIFICATION_PARTNER";
+    private static final String NOTIFICATION_TIME = "NOTIFICATION_TIME";
 
 
     public static SharedPreferences getSharedPrederences(Context context){
@@ -92,6 +99,66 @@ public class SaveSharedPreference {
 
     public static String getSessionToken(Context context){
         return  getSharedPrederences(context).getString(SESSION_TOKEN,"");
+    }
+
+    public static void setNotificationCotract(Context context, String notificationContract){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(NOTIFICATION_COTRACT,notificationContract);
+        editor.commit();
+    }
+
+    public static String getNotificationCotract(Context context){
+        return  getSharedPrederences(context).getString(NOTIFICATION_COTRACT,"");
+    }
+
+    public static void setNotificationPartner(Context context, String notificationPartner){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(NOTIFICATION_PARTNER,notificationPartner);
+        editor.commit();
+    }
+
+    public static String getNotificationPartner(Context context){
+        return  getSharedPrederences(context).getString(NOTIFICATION_PARTNER,"");
+    }
+
+    public static void setNotificationTime(Context context, String notificationTime){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(NOTIFICATION_PARTNER,notificationTime);
+        editor.commit();
+    }
+
+    public static String getNotificationTime(Context context){
+        return  getSharedPrederences(context).getString(NOTIFICATION_TIME,"");
+    }
+
+    public static void setSapTeamId(Context context, String sapTeamId){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(SAP_TEAM_ID,sapTeamId);
+        editor.commit();
+    }
+
+    public static String getSapTeamId(Context context){
+        return  getSharedPrederences(context).getString(SAP_TEAM_ID,"");
+    }
+
+    public static void setTeamUniqueId(Context context, String setTeamUniqueId){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(TEAM_UNIQUE_ID,setTeamUniqueId);
+        editor.commit();
+    }
+
+    public static String getTeamUniqueId(Context context){
+        return  getSharedPrederences(context).getString(TEAM_UNIQUE_ID,"");
+    }
+
+    public static void setCountryCode(Context context, String setCountryCode){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(COUNTRY_CODE,setCountryCode);
+        editor.commit();
+    }
+
+    public static String getCountryCode(Context context){
+        return  getSharedPrederences(context).getString(COUNTRY_CODE,"");
     }
 
 }

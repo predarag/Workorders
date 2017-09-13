@@ -1,6 +1,8 @@
 package rs.co.sbb.workorders.helper;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +25,16 @@ public class WorkordersAdapter extends RecyclerView.Adapter<WorkordersAdapter.My
     private List<Workorder> workorderList;
     private int lastPosition = -1;
     private Context context;
+    int color;
+
+    Animation animBlink;
 
 
     public class MyViweHolder extends RecyclerView.ViewHolder{
-        public TextView workorderType, workorderNo;
+        public TextView workorderType, workorderNo, workorderColot;
         public MyViweHolder(View itemView) {
             super(itemView);
+            workorderColot = (TextView) itemView.findViewById(R.id.itemColor);
             workorderType = (TextView) itemView.findViewById(R.id.workorder_type);
             workorderNo = (TextView) itemView.findViewById(R.id.workorder_no);
         }
@@ -37,6 +43,15 @@ public class WorkordersAdapter extends RecyclerView.Adapter<WorkordersAdapter.My
     public WorkordersAdapter(List<Workorder> workorderList, Context context){
         this.workorderList = workorderList;
         this.context = context;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            color = context.getColor(R.color.total_tv_list_color);
+        }
+
+        animBlink = AnimationUtils.loadAnimation(context,
+                R.anim.anim_blink);
+
+
+
     }
 
 
@@ -53,6 +68,10 @@ public class WorkordersAdapter extends RecyclerView.Adapter<WorkordersAdapter.My
         Workorder workorder = workorderList.get(position);
         holder.workorderNo.setText(workorder.getWorkorderNo());
         holder.workorderType.setText(workorder.getWorkorderType());
+        holder.workorderColot.setBackgroundColor(color);
+
+        if(workorder.getWorkorderNo().equals("1233456"))
+            holder.workorderColot.setAnimation(animBlink);
 
         setAnimation(holder.itemView,position);
     }
@@ -72,7 +91,6 @@ public class WorkordersAdapter extends RecyclerView.Adapter<WorkordersAdapter.My
             lastPosition = position;
         }
     }
-
 
 
 }

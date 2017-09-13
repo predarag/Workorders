@@ -1,4 +1,4 @@
-package rs.co.sbb.workorders.activity.enums;
+package rs.co.sbb.workorders.enums;
 
 /**
  * Created by Predrag.Tasic on 8/21/2017.

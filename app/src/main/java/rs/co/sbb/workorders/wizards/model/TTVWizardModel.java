@@ -27,7 +27,7 @@ public class TTVWizardModel extends AbstractWizardModel {
                         "Sesti").setRequired(false),*/
                 new TTVActivationStepTwoPage(this, "Izbor paketa").setRequired(false),
 //                new TextPage(this, "Comments").setRequired(false)
-                new TTVActivationStepThreePage(this, "Dodavanje opreme")
+                new TTVActivationStepThreePage(this, "Dodavanje opreme").setRequired(false)
 
         );
     }

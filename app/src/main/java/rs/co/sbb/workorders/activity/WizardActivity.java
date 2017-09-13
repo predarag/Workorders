@@ -1,40 +1,43 @@
 package rs.co.sbb.workorders.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.activity.ocr.IntentIntegrator;
-import rs.co.sbb.workorders.activity.ocr.IntentResult;
-import rs.co.sbb.workorders.utils.Utils;
+import rs.co.sbb.workorders.entity.Response;
+import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
+import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
+import rs.co.sbb.workorders.enums.EStatusCode;
+import rs.co.sbb.workorders.helper.TotalTvActivationHelper;
 import rs.co.sbb.workorders.wizards.model.TTVWizardModel;
-import rs.co.sbb.workorders.wizards.pages.TTVActivationStepThreeFragment;
 import rs.co.sbb.workorders.wizards.wizardpager.model.AbstractWizardModel;
 import rs.co.sbb.workorders.wizards.wizardpager.model.ModelCallbacks;
 import rs.co.sbb.workorders.wizards.wizardpager.model.Page;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.ReviewFragment;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.StepPagerStrip;
+import rs.co.sbb.workorders.ws.config.MobAppIntegrationConfig;
+import rs.co.sbb.workorders.ws.impl.MobAppIntegrationServiceImpl;
 
 /**
  * Created by milos.milic on 8/17/2017.
@@ -43,6 +46,7 @@ import rs.co.sbb.workorders.wizards.wizardpager.ui.StepPagerStrip;
 public class WizardActivity extends AppCompatActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
 
     private static final String TAG = "WizardActivityTTV";
+    public static final String ACTIVATION_MESSAGE = "ACTIVATION_MESSAGE";
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
@@ -59,11 +63,13 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
     private List<Page> mCurrentPageSequence;
     private StepPagerStrip mStepPagerStrip;
 
+    private View ttvWizardWorm;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wizard_holder_activity);
 
-        getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        ttvWizardWorm = (View) findViewById(R.id.ttv_wizard_form);
 
         // TODO detect which fragments to get - TTV or WO
 
@@ -111,41 +117,16 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             }
         });
 
-               /* setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mStepPagerStrip.setCurrentPage(position);
 
-                if (mConsumePageSelectedEvent) {
-                    mConsumePageSelectedEvent = false;
-                    return;
-                }
-
-                mEditingAfterReview = false;
-                updateBottomBar();
-            }
-        });*/
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
                     /* TODO .show dialog throws exception */
-                    Utils.showDialogQ(getApplicationContext(), "Work order wizard - dialog", "Da li ste sigurni da želite da pošaljete radni zadatak.");
+                    showDialogQ(WizardActivity.this, "Work order wizard - dialog", "Da li ste sigurni da želite da pošaljete radni zadatak.");
 
-                    /*DialogFragment dg = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                            return new AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.submit_confirm_message)
-                                    .setPositiveButton(
-                                            R.string.submit_confirm_button,
-                                            null)
-                                    .setNegativeButton(android.R.string.cancel,
-                                            null).create();
-                        }
-                    };
-                    dg.show(getSupportFragmentManager(), "Work order wizard");*/
+
                 } else {
                     if (mEditingAfterReview) {
                         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -165,6 +146,8 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
 
         onPageTreeChanged();
         updateBottomBar();
+
+        getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
     }
 
     @Override
@@ -320,5 +303,75 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         public int getCutOffPage() {
             return mCutOffPage;
         }
+    }
+
+
+    private void showDialogQ(final Context context, String title, String message){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
+
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
+
+        dlgAlert.setPositiveButton("Da",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        TotalTvActivationHolder request = TotalTvActivationHelper.createRequest(mCurrentPageSequence, WizardActivity.this);
+                        activateEquipment(request, WizardActivity.this);
+
+                    }
+                });
+
+        dlgAlert.setNegativeButton("Ne", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+    }
+
+    private void activateEquipment(TotalTvActivationHolder request, final Context context){
+
+        MobAppIntegrationServiceImpl service = new MobAppIntegrationServiceImpl(MobAppIntegrationConfig.TOTALTV_BASE_PATH);
+
+        TotalTvActivationRequest activationRequest = new TotalTvActivationRequest();
+        activationRequest.setTotalTvActivationHolder(request);
+
+        Call<Response> call = service.activateTotalTvEquipment(activationRequest);
+
+        call.enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                if(null != response && !response.isSuccessful() && response.errorBody() != null) {
+                    Log.i(TAG, response.code() + "");
+                    Log.i(TAG, response.errorBody() + "");
+                    Snackbar.make(WizardActivity.this.ttvWizardWorm, getString(R.string.error_server), Snackbar.LENGTH_LONG).show();
+                }
+                else{
+                    Response callResponse = response.body();
+                    Log.i(TAG, callResponse.getStatus()+" "+callResponse.getStatusMessage());
+                    Intent i = new Intent(context,HomeActivity.class);
+                    if(null != callResponse.getStatus() && callResponse.getStatus().equals(EStatusCode.OK.value())){
+                        i.putExtra(ACTIVATION_MESSAGE,getString(R.string.ttv_message_workorder_activation_sent));
+                    }
+                    else{
+                        i.putExtra(ACTIVATION_MESSAGE,getString(R.string.ttv_message_workorder_activation_failed));
+                    }
+
+
+                    context.startActivity(i);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+
+            }
+        });
     }
 }

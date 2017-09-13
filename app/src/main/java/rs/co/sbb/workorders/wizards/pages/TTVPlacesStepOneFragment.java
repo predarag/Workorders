@@ -7,25 +7,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,9 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
-import rs.co.sbb.workorders.activity.TotalTvActivationActivity;
 import rs.co.sbb.workorders.entity.SerbianAddressObject;
-import rs.co.sbb.workorders.wizards.wizardpager.model.Page;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
 import rs.co.sbb.workorders.ws.impl.SerbianAddressServiceImpl;
 
@@ -47,7 +47,7 @@ import rs.co.sbb.workorders.ws.impl.SerbianAddressServiceImpl;
 
 public class TTVPlacesStepOneFragment extends Fragment {
 
-    private static final String ARG_KEY = "key";
+    public static final String ARG_KEY = "TTV_STEP_ONE_KEY";
 
     private static final String TAG = "TTVWStepOneFrag";
 
@@ -69,6 +69,23 @@ public class TTVPlacesStepOneFragment extends Fragment {
     private View progressView;
 
 
+    private AutoCompleteTextView tvCommunity;
+    private AutoCompleteTextView tvSettelment;
+    private AutoCompleteTextView tvStreet;
+
+    private EditText etFirstName;
+    private EditText etLastName;
+    private EditText etJmbg;
+    private EditText etHouseNumber;
+    private EditText etSubNumber;
+    private EditText etPostCode;
+    private EditText etFixNumber;
+    private EditText etMobNumber;
+    private EditText etEmail;
+    private EditText etRoom;
+    private EditText etFloor;
+
+
     public static TTVPlacesStepOneFragment create(String key) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
@@ -82,7 +99,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
@@ -92,8 +109,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable  Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wizard_step1_fragment_ttv_activation, container, false);
 
         TextView tv = (TextView) rootView.findViewById(R.id.title);
@@ -102,67 +119,363 @@ public class TTVPlacesStepOneFragment extends Fragment {
         } else {
             Log.i(TAG, "onCreateView: There is no title.");
         }
-//        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        activateTotalTvForm = (View) rootView.findViewById(R.id.total_tv_activation_form);
-        progressView = (View) rootView.findViewById(R.id.total_tv_activation_progress);
+        etFirstName = (EditText) rootView.findViewById(R.id.etTtvFirstName);
+        etLastName = (EditText) rootView.findViewById(R.id.etTtvLastName);
+        etJmbg = (EditText) rootView.findViewById(R.id.etJТtvJmbg);
+        etPostCode = (EditText) rootView.findViewById(R.id.etTtvPostCode);
+        etHouseNumber = (EditText) rootView.findViewById(R.id.etTtvHouseNo);
+        etSubNumber = (EditText) rootView.findViewById(R.id.etTtvHouseNo2);
+        etMobNumber = (EditText) rootView.findViewById(R.id.etTtvMobile);
+        etFixNumber = (EditText) rootView.findViewById(R.id.etTtvFixNumber);
+        etEmail = (EditText) rootView.findViewById(R.id.etTtvEmail);
+        etRoom = (EditText) rootView.findViewById(R.id.etTtvRoom);
+        etFloor = (EditText) rootView.findViewById(R.id.etTtvFloor);
 
-        communitySpinner = (Spinner) rootView.findViewById(R.id.spinnerCommunities);
-        settlementSpinner = (Spinner) rootView.findViewById(R.id.spinnerSettlement);
-        streetSpinner = (Spinner) rootView.findViewById(R.id.spinnerStreet);
+        etFirstName.setText(mPage.getData().getString(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY));
+        etLastName.setText(mPage.getData().getString(TTVPlacesStepOnePage.LASTNAME_DATA_KEY));
+        etJmbg.setText(mPage.getData().getString(TTVPlacesStepOnePage.JMBG_DATA_KEY));
+
+        //addTextChangeListeners();
+
+        activateTotalTvForm = rootView.findViewById(R.id.total_tv_activation_form);
+        progressView = rootView.findViewById(R.id.total_tv_activation_progress);
+
+
+        tvCommunity = (AutoCompleteTextView) rootView.findViewById(R.id.tvТtvCommunity);
+        tvSettelment = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvSettelemnt);
+        tvStreet = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvStreet);
 
         getAllCommunitys();
 
-        communitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        tvCommunity.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SerbianAddressObject community = (SerbianAddressObject) parent.getSelectedItem();
-                communitySpinner.setSelection(position);
+            public boolean onTouch(View v, MotionEvent event) {
+                tvCommunity.showDropDown();
+                tvCommunity.requestFocus();
+                return false;
+            }
+
+        });
+
+        tvCommunity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SerbianAddressObject community = (SerbianAddressObject) parent.getAdapter().getItem(position);
+                //tvCommunity.setSelection(position);
 
                 getSettlementByCode(community.getCode());
             }
+        });
 
+
+        tvSettelment.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public boolean onTouch(View v, MotionEvent event) {
+                tvSettelment.showDropDown();
+                tvSettelment.requestFocus();
+                return false;
             }
         });
 
-        settlementSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        tvSettelment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SerbianAddressObject settelment = (SerbianAddressObject) parent.getSelectedItem();
-                settlementSpinner.setSelection(position);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SerbianAddressObject settelment = (SerbianAddressObject) parent.getAdapter().getItem(position);
+                // tvSettelment.setSelection(position);
 
                 getStreetBySettlementCode(settelment.getCode());
 
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        });
 
+
+        tvStreet.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tvStreet.showDropDown();
+                tvStreet.requestFocus();
+                return false;
             }
         });
 
-        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SerbianAddressObject street = (SerbianAddressObject) parent.getSelectedItem();
-                mPage.setCompletedPar(true);
-            }
 
+        tvStreet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SerbianAddressObject street = (SerbianAddressObject) parent.getAdapter().getItem(position);
 
             }
+
+
         });
 
-        /*mNameView = ((TextView) rootView.findViewById(R.id.your_name));
-        mNameView.setText(mPage.getData().getString(TTVPlacesStepOnePage.NAME_DATA_KEY));
 
-        mEmailView = ((TextView) rootView.findViewById(R.id.your_email));
-        mEmailView.setText(mPage.getData().getString(TTVPlacesStepOnePage.EMAIL_DATA_KEY));*/
         return rootView;
+    }
+
+    private void addTextChangeListeners() {
+        etFirstName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+                Log.i(TAG, mPage.isCompleted() + "");
+            }
+        });
+
+        etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.LASTNAME_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+                Log.i(TAG, mPage.isCompleted() + "");
+
+            }
+        });
+
+        etJmbg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.JMBG_DATA_KEY, s != null ? s.toString() : null);
+                //mPage.setCompletedPar(true);
+                mPage.notifyDataChanged();
+                Log.i(TAG, mPage.isCompleted() + "");
+
+            }
+        });
+        tvCommunity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        tvSettelment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        tvStreet.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.STREET_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etHouseNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etSubNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etPostCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.POST_CODE_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etFixNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etMobNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, s.toString());
+                mPage.getData().putString(TTVPlacesStepOnePage.MOBILE_NUMBER_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPage.getData().putString(TTVPlacesStepOnePage.EMAIL_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etRoom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPage.getData().putString(TTVPlacesStepOnePage.ROOM_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
+        etFloor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPage.getData().putString(TTVPlacesStepOnePage.FLOOR_DATA_KEY, s != null ? s.toString() : null);
+                mPage.notifyDataChanged();
+            }
+        });
     }
 
     @Override
@@ -188,16 +501,6 @@ public class TTVPlacesStepOneFragment extends Fragment {
         mCallbacks = (PageFragmentCallbacks) activity;
     }
 
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (!(activity instanceof PageFragmentCallbacks)) {
-            throw new ClassCastException("Activity must implement PageFragmentCallbacks");
-        }
-
-        mCallbacks = (PageFragmentCallbacks) activity;
-    }*/
 
     @Override
     public void onDetach() {
@@ -209,41 +512,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*mNameView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
+        addTextChangeListeners();
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TTVPlacesStepOnePage.NAME_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });*/
-
-        /*mEmailView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-                                          int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mPage.getData().putString(TTVPlacesStepOnePage.EMAIL_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
-                mPage.notifyDataChanged();
-            }
-        });*/
     }
 
     @Override
@@ -252,206 +522,230 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
         // In a future update to the support library, this should override setUserVisibleHint
         // instead of setMenuVisibility.
-       /* if (mNameView != null) {
+        if (etFirstName != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             if (!menuVisible) {
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
-        }*/
+        }
     }
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
-    private void getAllCommunitys(){
+    private void getAllCommunitys() {
 
-        showProgress(true);
 
-        SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
+        Log.i(TAG, "getAllCommunitys");
 
-        Call<HashMap<String,String>> call = service.getAllCommunitys();
+        Activity activity = getActivity();
 
-        call.enqueue(new Callback<HashMap<String, String>>() {
-            @Override
-            public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
+        if (isAdded() && activity != null) {
 
-                if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.d("communities", response.code()+"");
-                    Log.d("communities", response.errorBody()+"");
-                    showProgress(false);
-                    try {
-                        Toast.makeText(getActivity(),response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.e("communities",e.getMessage());
+            showProgress(true);
+
+            SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
+
+            Call<HashMap<String, String>> call = service.getAllCommunitys();
+
+            call.enqueue(new Callback<HashMap<String, String>>() {
+                @Override
+                public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
+
+                    if (null != response && !response.isSuccessful() && response.errorBody() != null) {
+                        Log.d("communities", response.code() + "");
+                        Log.d("communities", response.errorBody() + "");
                         showProgress(false);
-                        e.printStackTrace();
+                        try {
+                            Toast.makeText(getActivity(), response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            Log.e("communities", e.getMessage());
+                            showProgress(false);
+                            e.printStackTrace();
+                        }
+                    } else {
+                        HashMap<String, String> communities = response.body();
+
+                        Iterator it = communities.entrySet().iterator();
+                        while (it.hasNext()) {
+
+                            Map.Entry pair = (Map.Entry) it.next();
+
+                            Log.d("communities", pair.getKey() + " " + pair.getValue());
+                            communitiesList.add(new SerbianAddressObject(pair.getKey().toString(),
+                                    pair.getValue().toString()));
+                        }
+
+                        sortData(communitiesList);
+
+                        populateCommunitySpinner(communitiesList);
+
                     }
-                }
-                else{
-                    HashMap<String, String> communities = response.body();
-
-                    Iterator it = communities.entrySet().iterator();
-                    while(it.hasNext()){
-
-                        Map.Entry pair = (Map.Entry) it.next();
-
-                        Log.d("communities",pair.getKey()+" "+pair.getValue());
-                        communitiesList.add(new SerbianAddressObject(pair.getKey().toString(),
-                                pair.getValue().toString()));
-                    }
-
-                    populateCommunitySpinner(communitiesList);
 
                 }
 
-            }
-
-            @Override
-            public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
-                showProgress(false);
-                Toast.makeText(getActivity(),"Doslo je do greske: "+t.getMessage(),Toast.LENGTH_LONG).show();
-                Log.e("communities",t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
+                    showProgress(false);
+                    Toast.makeText(getActivity(), "Doslo je do greske: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("communities", t.getMessage());
+                }
+            });
+        }
 
     }
 
 
-    private void getSettlementByCode(String communityCode){
+    private void getSettlementByCode(String communityCode) {
 
-        Log.i("communityCode","USAO SA: "+communityCode);
+        Log.i("communityCode", "USAO SA: " + communityCode);
 
-        showProgress(true);
+        Activity activity = getActivity();
 
-        settlmentList.clear();
+        if (isAdded() && activity != null) {
 
-        SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
+            showProgress(true);
 
-        Call<HashMap<String,String>> call = service.getSettlementByCommunityCode(communityCode);
+            settlmentList.clear();
 
-        call.enqueue(new Callback<HashMap<String, String>>() {
-            @Override
-            public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
-                if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.d("getSettlementByCode", response.code()+"");
-                    Log.d("getSettlementByCode", response.errorBody()+"");
+            SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-                    showProgress(false);
+            Call<HashMap<String, String>> call = service.getSettlementByCommunityCode(communityCode);
 
-                    try {
-                        Toast.makeText(getActivity(),response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
+            call.enqueue(new Callback<HashMap<String, String>>() {
+                @Override
+                public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
+                    if (null != response && !response.isSuccessful() && response.errorBody() != null) {
+                        Log.d("getSettlementByCode", response.code() + "");
+                        Log.d("getSettlementByCode", response.errorBody() + "");
+
                         showProgress(false);
-                        Log.e("communities",e.getMessage());
-                        e.printStackTrace();
+
+                        try {
+                            Toast.makeText(getActivity(), response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            showProgress(false);
+                            Log.e("communities", e.getMessage());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        HashMap<String, String> communities = response.body();
+
+                        Iterator it = communities.entrySet().iterator();
+                        while (it.hasNext()) {
+
+                            Map.Entry pair = (Map.Entry) it.next();
+
+                            Log.d("settelemt", pair.getKey() + " " + pair.getValue());
+                            settlmentList.add(new SerbianAddressObject(pair.getKey().toString(),
+                                    pair.getValue().toString()));
+                        }
+
+                        sortData(settlmentList);
+
+                        populateSettlementSpiner(settlmentList);
                     }
                 }
-                else{
-                    HashMap<String, String> communities = response.body();
 
-                    Iterator it = communities.entrySet().iterator();
-                    while(it.hasNext()){
-
-                        Map.Entry pair = (Map.Entry) it.next();
-
-                        Log.d("settelemt",pair.getKey()+" "+pair.getValue());
-                        settlmentList.add(new SerbianAddressObject(pair.getKey().toString(),
-                                pair.getValue().toString()));
-                    }
-
-                    populateSettlementSpiner(settlmentList);
+                @Override
+                public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
+                    showProgress(false);
+                    Log.e("settelemt", t.getMessage());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
-                showProgress(false);
-                Log.e("settelemt",t.getMessage());
-            }
-        });
+            });
+        }
     }
 
 
-    private void getStreetBySettlementCode(String settlementCode){
+    private void getStreetBySettlementCode(String settlementCode) {
 
-        Log.i("streets","USAO SA: "+settlementCode);
+        Log.i("streets", "USAO SA: " + settlementCode);
 
-        showProgress(true);
+        Activity activity = getActivity();
 
-        streetList.clear();
+        if (isAdded() && activity != null) {
 
-        SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
+            showProgress(true);
 
-        Call<HashMap<String,String>> call = service.getStreetsBySettlementCode(settlementCode);
+            streetList.clear();
 
-        call.enqueue(new Callback<HashMap<String, String>>() {
-            @Override
-            public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
-                if(null != response && !response.isSuccessful() && response.errorBody() != null){
-                    Log.d("streets", response.code()+"");
-                    Log.d("streets", response.errorBody()+"");
+            SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-                    showProgress(false);
+            Call<HashMap<String, String>> call = service.getStreetsBySettlementCode(settlementCode);
 
-                    try {
-                        Toast.makeText(getActivity(),response.errorBody().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.e("streets",e.getMessage());
+            call.enqueue(new Callback<HashMap<String, String>>() {
+                @Override
+                public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
+                    if (null != response && !response.isSuccessful() && response.errorBody() != null) {
+                        Log.d("streets", response.code() + "");
+                        Log.d("streets", response.errorBody() + "");
+
                         showProgress(false);
-                        e.printStackTrace();
+
+                        try {
+                            Toast.makeText(getActivity(), response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            Log.e("streets", e.getMessage());
+                            showProgress(false);
+                            e.printStackTrace();
+                        }
+                    } else {
+                        HashMap<String, String> communities = response.body();
+
+                        Iterator it = communities.entrySet().iterator();
+                        while (it.hasNext()) {
+
+                            Map.Entry pair = (Map.Entry) it.next();
+
+                            Log.d("streets", pair.getKey() + " " + pair.getValue());
+                            streetList.add(new SerbianAddressObject(pair.getKey().toString(),
+                                    pair.getValue().toString()));
+                        }
+
+                        sortData(streetList);
+
+                        populateStreetSpiner(streetList);
                     }
                 }
-                else{
-                    HashMap<String, String> communities = response.body();
 
-                    Iterator it = communities.entrySet().iterator();
-                    while(it.hasNext()){
-
-                        Map.Entry pair = (Map.Entry) it.next();
-
-                        Log.d("streets",pair.getKey()+" "+pair.getValue());
-                        streetList.add(new SerbianAddressObject(pair.getKey().toString(),
-                                pair.getValue().toString()));
-                    }
-
-                    populateStreetSpiner(streetList);
+                @Override
+                public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
+                    Log.e("streets", t.getMessage());
+                    showProgress(false);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
-                Log.e("streets",t.getMessage());
-                showProgress(false);
-            }
-        });
+            });
+        }
     }
 
-    private void populateCommunitySpinner(List<SerbianAddressObject> communitiesList){
-        ArrayAdapter<SerbianAddressObject> communityAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,communitiesList);
-        communityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    private void populateCommunitySpinner(List<SerbianAddressObject> communitiesList) {
+        Log.i(TAG, "populateCommunitySpinner");
+        ArrayAdapter<SerbianAddressObject> communityAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, communitiesList);
+        //communityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        communitySpinner.setAdapter(communityAdapter);
+        tvCommunity.setAdapter(communityAdapter);
         showProgress(false);
     }
 
-    private void populateSettlementSpiner(List<SerbianAddressObject> settlmentList){
-        ArrayAdapter<SerbianAddressObject> settlementAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,settlmentList);
-        settlementAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    private void populateSettlementSpiner(List<SerbianAddressObject> settlmentList) {
+        Log.i(TAG, "populateSettlementSpiner");
+        ArrayAdapter<SerbianAddressObject> settlementAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, settlmentList);
+        //settlementAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        settlementSpinner.setAdapter(settlementAdapter);
+        tvSettelment.setAdapter(settlementAdapter);
 
         showProgress(false);
     }
 
-    private void populateStreetSpiner(List<SerbianAddressObject> settlmentList){
-        ArrayAdapter<SerbianAddressObject> streetAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(),android.R.layout.simple_spinner_item,streetList);
-        streetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    private void populateStreetSpiner(List<SerbianAddressObject> settlmentList) {
+        Log.i(TAG, "populateStreetSpiner");
+        ArrayAdapter<SerbianAddressObject> streetAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, streetList);
+        //streetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        streetSpinner.setAdapter(streetAdapter);
+        tvStreet.setAdapter(streetAdapter);
 
         showProgress(false);
     }
@@ -486,5 +780,14 @@ public class TTVPlacesStepOneFragment extends Fragment {
         }
     }
 
+
+    private void sortData(List<SerbianAddressObject> addressObjects) {
+        Collections.sort(addressObjects, new Comparator<SerbianAddressObject>() {
+            @Override
+            public int compare(SerbianAddressObject o1, SerbianAddressObject o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+    }
 
 }

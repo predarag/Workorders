@@ -44,6 +44,24 @@
                 android:gravity="center">
 
                 <AutoCompleteTextView
+                    android:id="@+id/tvLoginCompanyPicker"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dip"
+                    android:dropDownHeight="wrap_content"
+                    android:hint="Kompanija"
+                    android:imeActionLabel="Kompanija"
+                    android:gravity="center"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <AutoCompleteTextView
                     android:id="@+id/username"
                     android:layout_width="288dp"
                     android:layout_height="wrap_content"
