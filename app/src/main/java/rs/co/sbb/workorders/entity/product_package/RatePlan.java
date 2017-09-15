@@ -4,11 +4,12 @@ package rs.co.sbb.workorders.entity.product_package;
  * Created by Predrag.Tasic on 9/11/2017.
  */
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RatePlan {
+public class RatePlan implements Serializable{
 
     @SerializedName("ratePlanCode")
     @Expose

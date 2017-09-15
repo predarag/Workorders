@@ -39,6 +39,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText etLastName;
     private EditText etEmail;
     private EditText etPhoneNumber;
+    private EditText etSapTeamId;
+    private EditText etInternalTeamId;
 
     private static final String TAG = "PROFILE";
 
@@ -86,6 +88,8 @@ public class ProfileActivity extends AppCompatActivity {
         etLastName =  (EditText) findViewById(R.id.etLastName);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPhoneNumber = (EditText) findViewById(R.id.etPhone);
+        etSapTeamId = (EditText) findViewById(R.id.etProfileSapTeamId);
+        etInternalTeamId = (EditText) findViewById(R.id.etProfileInternalTeamId);
 
         populateTextViews();
     }
@@ -118,6 +122,8 @@ public class ProfileActivity extends AppCompatActivity {
         etLastName.setText(SaveSharedPreference.getLASTNAME(this));
         etEmail.setText(SaveSharedPreference.getEMAIL(this));
         etPhoneNumber.setText(SaveSharedPreference.getPHONE(this));
+        etSapTeamId.setText(SaveSharedPreference.getSapTeamId(this));
+        etInternalTeamId.setText(SaveSharedPreference.getTeamUniqueId(this));
 
     }
 

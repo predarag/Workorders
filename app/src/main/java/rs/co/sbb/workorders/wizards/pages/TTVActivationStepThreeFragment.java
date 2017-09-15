@@ -18,11 +18,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.activity.ocr.IntentIntegrator;
 import rs.co.sbb.workorders.activity.ocr.IntentResult;
+import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
+import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.enums.ETotalTvScanType;
+import rs.co.sbb.workorders.utils.SaveSharedPreference;
+import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
+import rs.co.sbb.workorders.ws.config.MobAppIntegrationConfig;
+import rs.co.sbb.workorders.ws.impl.MobAppIntegrationServiceImpl;
 
 /**
  * Created by milos.milic on 8/21/2017.
@@ -73,6 +82,8 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
     private ImageButton imgBtnCloseCard2;
     private ImageButton imgBtnCloseCard3;
     private ImageButton imgBtnCloseCard4;
+
+    private CheckEquipmentResponse equipmentResponse = null;
 
     public static TTVActivationStepThreeFragment create(String key) {
         Bundle args = new Bundle();
@@ -370,9 +381,12 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
 
             if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_1.getScanType())) {
-                etSerial1.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
+
+
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_2.getScanType())) {
                 etSerial2.setText(scanContent);
@@ -424,6 +438,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
             toast.show();
         }
     }
+
 
     @Override
     public void onDestroy() {
@@ -486,6 +501,62 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
             startActivityForResult(IntentIntegrator.externalIntent, scanIntegrator.REQUEST_CODE);
             clickType = ETotalTvScanType.BUTTON_BOX_4.getScanType();
 
+        }
+    }
+
+    private CheckEquipmentResponse checkEquipment(String serialNo){
+
+        equipmentResponse = null;
+
+        MobAppIntegrationServiceImpl service = new MobAppIntegrationServiceImpl(MobAppIntegrationConfig.SAPINTEGRATION_BASE_PATH);
+
+        Call<CheckEquipmentResponse> call = service.checkSapEquipment(serialNo);
+
+        call.enqueue(new Callback<CheckEquipmentResponse>() {
+            @Override
+            public void onResponse(Call<CheckEquipmentResponse> call, Response<CheckEquipmentResponse> response) {
+                if (null != response && !response.isSuccessful() && response.errorBody() != null) {
+                    Log.i(TAG, response.code() + "");
+                    Log.i(TAG, response.body() + "");
+                    //showProgress(false);
+                }
+                else{
+                    equipmentResponse = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CheckEquipmentResponse> call, Throwable t) {
+                Log.i(TAG, "ERROR: "+t.getMessage());
+                Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
+            }
+        });
+
+        return  equipmentResponse;
+
+    }
+
+    private void setTextBoxValue(CheckEquipmentResponse response, EditText et, String dataKey, String textViewValue){
+
+        if(null != response && !response.getStatus().equals("")){
+            if(response.getStatus().equals(EStatusCode.OK.value())){
+
+                if(!response.getEquipment().getServiceTeamForStorageLocation().equals(SaveSharedPreference.getSapTeamId(getActivity()))){
+                    Utils.showDialog(getActivity(),getString(R.string.error), "Oprema nije dodeljenja vasem timu!");
+                }
+                else{
+                    etSerial1.setText(textViewValue);
+                    mPage.getData().putString(dataKey ,textViewValue);
+                    mPage.notifyDataChanged();
+                }
+
+            }
+            else{
+                Utils.showDialog(getActivity(),getString(R.string.error), response.getStatusMessage());
+            }
+        }
+        else{
+            Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
         }
     }
 }

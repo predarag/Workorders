@@ -6,7 +6,7 @@ package rs.co.sbb.workorders.ws.config;
 
 public class ExternalAuthConfig {
 
-    private static final String HOST = "192.168.2.173";
+    private static final String HOST = "192.168.2.170";
     private static final String PORT = ":5555";
     public static final String USERNAME = "Administrator";
     public static final String PASSWORD = "manage";

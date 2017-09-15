@@ -11,6 +11,7 @@ import rs.co.sbb.workorders.entity.totaltv.Device;
 import rs.co.sbb.workorders.entity.totaltv.OperaterInfo;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
 import rs.co.sbb.workorders.utils.SaveSharedPreference;
+import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.wizards.pages.TTVActivationStepThreePage;
 import rs.co.sbb.workorders.wizards.pages.TTVActivationStepTwoPage;
 import rs.co.sbb.workorders.wizards.pages.TTVPlacesStepOnePage;
@@ -45,20 +46,33 @@ public class TotalTvActivationHelper {
 
             request = setUserData(mCurrentPageSequence, request, context);
 
-            if(null != mCurrentPageSequence.get(1).getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY)) {
-                ArrayList<String> bps = mCurrentPageSequence.get(1).getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY);
+            if(null != mCurrentPageSequence.get(1).getData().getStringArrayList(TTVActivationStepTwoPage.BILLING_PRODUCTS_DATA_KEY)) {
+                ArrayList<String> bps = mCurrentPageSequence.get(1).getData().getStringArrayList(TTVActivationStepTwoPage.BILLING_PRODUCTS_DATA_KEY);
                 for (String string : bps)
                     Log.i(TAG, "BP: " + string);
                 request.setProducts(bps);
             }
 
             if(null != mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY) &&
-                      TextUtils.isEmpty(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY).toString())) {
+                      !TextUtils.isEmpty(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY).toString())) {
+                Log.i(TAG, mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY).toString());
                 request.setProductPackageCode(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY).toString());
 
             }
 
-            Log.i(TAG, mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY).toString());
+            if(null != mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY) &&
+                    !TextUtils.isEmpty(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY).toString())) {
+                Log.i(TAG, mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY).toString());
+                request.setOptionCode(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY).toString());
+
+            }
+
+            if(null != mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DURATION_DATA_KEY) &&
+                    !TextUtils.isEmpty(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DURATION_DATA_KEY).toString())) {
+                Log.i(TAG, mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DURATION_DATA_KEY).toString());
+                request.setOptionDuration(mCurrentPageSequence.get(1).getData().get(TTVActivationStepTwoPage.PACKAGE_OPTION_DURATION_DATA_KEY).toString());
+
+            }
 
 
             request.setDevices(setDeviceData(mCurrentPageSequence));
@@ -67,8 +81,9 @@ public class TotalTvActivationHelper {
             operaterInfo.setUsername(SaveSharedPreference.getUser(context));
             operaterInfo.setSapTeamId(SaveSharedPreference.getSapTeamId(context));
             operaterInfo.setTeamId(SaveSharedPreference.getTeamUniqueId(context));
-            operaterInfo.setChannel("MOBILE_APP");
+            operaterInfo.setChannel("USER_INIT");
 
+            request.setOperaterInfo(operaterInfo);
 
 
 
@@ -151,21 +166,21 @@ public class TotalTvActivationHelper {
         String street = null;
         String postCode = null;
         String houseNO = null;
-        String subNo = null;
+        String subNo = "0000";
         String fixNumber = null;
         String mobNumber = null;
         String email = null;
-        String floor = null;
-        String room = null;
+        String floor = "0000";
+        String room = "0000";
 
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString()))
-            firstName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString();
+            firstName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString().toUpperCase();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString()))
-            lastName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString();
+            lastName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString().toUpperCase();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString()))
@@ -184,12 +199,16 @@ public class TotalTvActivationHelper {
             postCode = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString())) {
             houseNO = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString();
+            houseNO = Utils.generateHouseNoString(houseNO);
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString())) {
             subNo = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString();
+            subNo = Utils.generateHouseNoString(subNo);
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString()))
@@ -201,7 +220,7 @@ public class TotalTvActivationHelper {
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString()))
-            email = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString();
+            email = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString().toUpperCase();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY).toString()))
@@ -215,9 +234,9 @@ public class TotalTvActivationHelper {
 
         request.setFirstName(firstName);
         request.setLastName(lastName);
-        request.setCity(community);
-        request.setRegion(settelment);
-        request.setStreet(street);
+        request.setCity("BEOGRAD");
+        request.setRegion("BEOGRAD-NOVI BEOGRAD");
+        request.setStreet("OMLADINSKIH BRIGADA");
         request.setPostcode(postCode);
         request.setHouseNum(houseNO);
         request.setHouseNum2(subNo);
@@ -227,6 +246,7 @@ public class TotalTvActivationHelper {
         request.setFloor(floor);
         request.setRoom(room);
         request.setCountry(SaveSharedPreference.getCountryCode(context));
+
 
         return request;
     }

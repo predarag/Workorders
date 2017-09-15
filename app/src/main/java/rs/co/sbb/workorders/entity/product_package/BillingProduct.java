@@ -7,7 +7,9 @@ package rs.co.sbb.workorders.entity.product_package;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class BillingProduct {
+import java.io.Serializable;
+
+public class BillingProduct implements Serializable {
 
     @SerializedName("billingProductCode")
     @Expose

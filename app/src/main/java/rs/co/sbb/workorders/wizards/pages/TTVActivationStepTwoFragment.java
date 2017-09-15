@@ -7,15 +7,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -58,8 +64,10 @@ public class TTVActivationStepTwoFragment extends Fragment {
     private String mKey;
     private TTVActivationStepTwoPage mPage;
 
-    private Spinner packagesSpinner;
-    private Spinner optionsSpinner;
+    private AutoCompleteTextView packagesSpinner;
+    private AutoCompleteTextView optionsSpinner;
+
+
 
     private List<String> packages = new ArrayList<String>();
     private LinearLayout layoutTtvCheckBox;
@@ -84,6 +92,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
         TTVActivationStepTwoFragment fragment = new TTVActivationStepTwoFragment();
         fragment.setArguments(args);
+        Log.i(TAG, "create");
         return fragment;
     }
 
@@ -97,6 +106,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
         mPage = (TTVActivationStepTwoPage) mCallbacks.onGetPage(mKey);
+        Log.i(TAG, "onCreate");
+
 
 
     }
@@ -105,6 +116,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wizard_step2_fragment_ttv_activation, container, false);
+
+        Log.i(TAG, "onCreateView");
 
         mainView = rootView;
 
@@ -119,48 +132,91 @@ public class TTVActivationStepTwoFragment extends Fragment {
         formTtvPacakges = rootView.findViewById(R.id.total_tv_pacakges_form);
         progressView = rootView.findViewById(R.id.total_tv_packages_progress);
 
-        packagesSpinner = (Spinner) rootView.findViewById(R.id.spinnerTtvPackages);
-        optionsSpinner = (Spinner) rootView.findViewById(R.id.spinnerTtvPackageOptions);
+        packagesSpinner = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvPackages);
+        optionsSpinner = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvOption);
 
         getProductPackages();
 
 
         layoutTtvCheckBox = (LinearLayout) rootView.findViewById(R.id.ttvPackagesLayout);
 
-        packagesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        packagesSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onTouch(View v, MotionEvent event) {
+                packagesSpinner.showDropDown();
+                packagesSpinner.requestFocus();
+                return false;
+            }
+        });
+
+        optionsSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                optionsSpinner.showDropDown();
+                optionsSpinner.requestFocus();
+                return false;
+            }
+        });
+
+        packagesSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ProductPackage productPackage = (ProductPackage) parent.getAdapter().getItem(position);
 
-                mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, productPackage.getProductPackageCode());
-                mPage.notifyDataChanged();
 
                 checkedBillingProducts.clear();
                 createAddonsCheckBoxes(productPackage.getRatePlans());
 
                 getPackageOptions(productPackage.getProductPackageCode());
+                closeKeyboard(getActivity(),packagesSpinner.getWindowToken());
+
+                mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_NAME_DATA_KEY, productPackage.getProductPackageName());
+                mPage.getData().putSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET,productPackage);
+                mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, productPackage.getProductPackageCode());
+                mPage.notifyDataChanged();
+
+            }
+
+        });
+
+        packagesSpinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, s != null ? s.toString() : null);
+                mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_NAME_DATA_KEY, s != null ? s.toString() : null);
                 mPage.notifyDataChanged();
             }
         });
 
-        optionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        optionsSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                closeKeyboard(getActivity(),optionsSpinner.getWindowToken());
                 ProductPackageOption option = (ProductPackageOption) parent.getAdapter().getItem(position);
                 mPage.getData().putString(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY, option.getOptionNumber());
+                mPage.getData().putString(TTVActivationStepTwoPage.PACKAGE_OPTION_NAME_DATA_KEY, option.getDescription());
+                mPage.getData().putString(TTVActivationStepTwoPage.PACKAGE_OPTION_DURATION_DATA_KEY, option.getDuration());
                 mPage.notifyDataChanged();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mPage.notifyDataChanged();
-            }
+
         });
+
+        if(mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET) != null ){
+            ProductPackage productPackage = (ProductPackage) mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET);
+
+            createAddonsCheckBoxes(productPackage.getRatePlans());
+        }
 
         return rootView;
     }
@@ -179,6 +235,15 @@ public class TTVActivationStepTwoFragment extends Fragment {
                 checkBox.setId(i++);
                 checkBox.setText(billingProduct.getBillingProductName());
                 checkBox.setHighlightColor(getResources().getColor(R.color.colorPrimary));
+
+                if(mPage.getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY) != null){
+                    List<String> checkedBpsTemp = (List<String>) mPage.getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY);
+                    for(String checkedBp : checkedBpsTemp){
+                        if(checkedBp.equals(billingProduct.getBillingProductCode()))
+                            checkBox.setChecked(true);
+                    }
+                }
+
                 if (billingProduct.getMappingType().equals(EBillingProdcutType.INCLUDED.value())) {
                     checkBox.setClickable(false);
                     checkBox.setChecked(true);
@@ -245,6 +310,9 @@ public class TTVActivationStepTwoFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+
+        Log.i(TAG, "onAttach");
+
         Activity activity = null;
         try {
             if (context instanceof Activity) {
@@ -266,6 +334,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        Log.i(TAG, "onDetach");
         super.onDetach();
         mCallbacks = null;
     }
@@ -319,6 +388,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG,"onResume");
     }
 
     private void getProductPackages() {
@@ -377,6 +447,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
         if (isAdded() && activity != null) {
 
+            optionsSpinner.setText("");
+
             showProgress(true);
             MobAppIntegrationServiceImpl service = new MobAppIntegrationServiceImpl(MobAppIntegrationConfig.SAPINTEGRATION_BASE_PATH);
 
@@ -415,6 +487,11 @@ public class TTVActivationStepTwoFragment extends Fragment {
             });
         }
 
+    }
+
+    public static void closeKeyboard(Context c, IBinder windowToken) {
+        InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(windowToken, 0);
     }
 
 

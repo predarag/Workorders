@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -187,5 +189,26 @@ public class Utils {
 
     }
 
+/*    public void hideSoftInput(View view){
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }*/
+
+
+    public static String generateHouseNoString(String houseNo){
+
+        if(houseNo.length() == 1){
+            return  "00"+houseNo;
+        }
+        else if(houseNo.length() == 2){
+            return  "0"+houseNo;
+        }
+        else
+            return houseNo;
+
+
+    }
 
 }

@@ -98,7 +98,7 @@
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginTop="10dp"
                     android:dropDownHeight="wrap_content"
                     android:hint="@string/ttv_community"
                     android:imeActionLabel="@string/ttv_community" />
@@ -115,7 +115,7 @@
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginTop="10dp"
                     android:hint="@string/ttv_settlement"
                     android:imeActionLabel="@string/ttv_settlement" />
 
@@ -132,7 +132,7 @@
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginTop="10dp"
                     android:hint="@string/ttv_street"
                     android:imeActionLabel="@string/ttv_street" />
 

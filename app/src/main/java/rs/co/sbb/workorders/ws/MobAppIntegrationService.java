@@ -8,6 +8,7 @@ import retrofit2.http.Query;
 import rs.co.sbb.workorders.entity.Response;
 import rs.co.sbb.workorders.entity.product_package.PackageOptionResponse;
 import rs.co.sbb.workorders.entity.product_package.ProductPackageResponse;
+import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
 
@@ -27,5 +28,8 @@ public interface MobAppIntegrationService {
     @GET("product_options")
     public Call<PackageOptionResponse> getProductPackageOptions(@Query("productPackage") String productPackage,
                                                                 @Query("country") String country);
+
+    @GET("equipment")
+    public Call<CheckEquipmentResponse> checkSapEquipment(@Query("serialNo") String serailNo);
 
 }

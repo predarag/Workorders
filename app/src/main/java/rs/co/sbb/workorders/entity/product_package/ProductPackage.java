@@ -4,11 +4,12 @@ package rs.co.sbb.workorders.entity.product_package;
  * Created by Predrag.Tasic on 9/11/2017.
  */
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProductPackage {
+public class ProductPackage implements Serializable{
 
     @SerializedName("productPackageName")
     @Expose
@@ -22,12 +23,9 @@ public class ProductPackage {
     @SerializedName("productPackageCode")
     @Expose
     private String productPackageCode;
-    @SerializedName("description")
+    @SerializedName("validTo")
     @Expose
-    private Object description;
-    @SerializedName("priceNet")
-    @Expose
-    private String priceNet;
+    private String validTo;
     @SerializedName("RatePlans")
     @Expose
     private List<RatePlan> ratePlans = null;
@@ -64,17 +62,14 @@ public class ProductPackage {
         this.productPackageCode = productPackageCode;
     }
 
-    public Object getDescription() {
-        return description;
+    public Object getValidTo() {
+        return validTo;
     }
 
-    public void setDescription(Object description) {
-        this.description = description;
+    public void setValidTod(String validTo) {
+        this.validTo = validTo;
     }
 
-    public String getPriceNet() {
-        return priceNet;
-    }
 
     @Override
     public String toString() {
@@ -96,10 +91,9 @@ public class ProductPackage {
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (productPackageCode != null ? !productPackageCode.equals(that.productPackageCode) : that.productPackageCode != null)
             return false;
-        if (description != null ? !description.equals(that.description) : that.description != null)
+        if (validTo != null ? !validTo.equals(that.validTo) : that.validTo != null)
             return false;
-        if (priceNet != null ? !priceNet.equals(that.priceNet) : that.priceNet != null)
-            return false;
+
         return ratePlans != null ? ratePlans.equals(that.ratePlans) : that.ratePlans == null;
 
     }
@@ -110,15 +104,11 @@ public class ProductPackage {
         result = 31 * result + (productPackageFamilyId != null ? productPackageFamilyId.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (productPackageCode != null ? productPackageCode.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (priceNet != null ? priceNet.hashCode() : 0);
+        result = 31 * result + (validTo != null ? validTo.hashCode() : 0);
         result = 31 * result + (ratePlans != null ? ratePlans.hashCode() : 0);
         return result;
     }
 
-    public void setPriceNet(String priceNet) {
-        this.priceNet = priceNet;
-    }
 
     public List<RatePlan> getRatePlans() {
         return ratePlans;

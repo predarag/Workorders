@@ -15,6 +15,13 @@ public class TotalTvActivationHolder {
     @SerializedName("productPackageCode")
     @Expose
     private String productPackageCode;
+    @SerializedName("optionCode")
+    @Expose
+    private String optionCode;
+    @SerializedName("optionDuration")
+    @Expose
+    private String optionDuration;
+
     @SerializedName("firstName")
     @Expose
     private String firstName;
@@ -248,5 +255,21 @@ public class TotalTvActivationHolder {
 
     public void setOperaterInfo(OperaterInfo operaterInfo) {
         this.operaterInfo = operaterInfo;
+    }
+
+    public String getOptionCode() {
+        return optionCode;
+    }
+
+    public void setOptionCode(String optionCode) {
+        this.optionCode = optionCode;
+    }
+
+    public String getOptionDuration() {
+        return optionDuration;
+    }
+
+    public void setOptionDuration(String optionDuration) {
+        this.optionDuration = optionDuration;
     }
 }

@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rs.co.sbb.workorders.entity.product_package.PackageOptionResponse;
 import rs.co.sbb.workorders.entity.product_package.ProductPackageResponse;
+import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
 import rs.co.sbb.workorders.ws.MobAppIntegrationService;
@@ -67,6 +68,12 @@ public class MobAppIntegrationServiceImpl {
         MobAppIntegrationService service = retrofit.create(MobAppIntegrationService.class);
 
         return service.getProductPackageOptions(productPackage,country);
+    }
+
+    public Call<CheckEquipmentResponse> checkSapEquipment(String serialNo){
+        MobAppIntegrationService service = retrofit.create(MobAppIntegrationService.class);
+
+        return service.checkSapEquipment(serialNo);
     }
 
 
