@@ -48,27 +48,27 @@ public class SerbianAddressServiceImpl {
 
     }
 
-    public Call<HashMap<String,String>> getAllCommunitys(){
+    public Call<HashMap<String,String>> getAllCitys(){
 
         SerbianAddressService service = retrofit.create(SerbianAddressService.class);
 
-        return  service.getAllCommunitys();
+        return  service.getAllCities();
 
     }
 
-    public Call<HashMap<String,String>> getSettlementByCommunityCode(String communityCode){
+    public Call<HashMap<String,String>> getRegionByCityCode(String cityCode){
 
         SerbianAddressService service = retrofit.create(SerbianAddressService.class);
 
-        return  service.getSettlementByCommunityCode(communityCode);
+        return  service.getRegionByCityCode(cityCode);
 
     }
 
-    public Call<HashMap<String,String>> getStreetsBySettlementCode(String settlementCode){
+    public Call<HashMap<String,String>> getStreetsByRegionCode(String regionCode){
 
         SerbianAddressService service = retrofit.create(SerbianAddressService.class);
 
-        Call<HashMap<String,String>> call = service.getStreetsBySettlementCode(settlementCode);
+        Call<HashMap<String,String>> call = service.getStreetsByRegionCode(regionCode);
 
         Log.i("streets",call.request().url().toString());
 

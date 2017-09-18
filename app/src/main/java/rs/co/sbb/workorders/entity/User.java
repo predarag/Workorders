@@ -41,6 +41,9 @@ public class User {
     @Expose
     @SerializedName("teamUniqueId")
     private String teamUniqueId;
+    @Expose
+    @SerializedName("storageLocationId")
+    private String storageLocationId;
 
 
     public String getId() {
@@ -144,5 +147,13 @@ public class User {
 
     public void setTeamUniqueId(String teamUniqueId) {
         this.teamUniqueId = teamUniqueId;
+    }
+
+    public String getStorageLocationId() {
+        return storageLocationId;
+    }
+
+    public void setStorageLocationId(String storageLocationId) {
+        this.storageLocationId = storageLocationId;
     }
 }

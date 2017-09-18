@@ -20,6 +20,7 @@ public class SaveSharedPreference {
     private static final String SAP_TEAM_ID = "SAP_TEAM_ID";
     private static final String TEAM_UNIQUE_ID = "TEAM_UNIQUE_ID";
     private static final String COUNTRY_CODE = "COUNTRY_CODE";
+    private static final String SAP_STORAGE_LOCATION = "SAP_STORAGE_LOCATION";
 
     private static final String NOTIFICATION_COTRACT = "NOTIFICATION_COTRACT";
     private static final String NOTIFICATION_PARTNER = "NOTIFICATION_PARTNER";
@@ -159,6 +160,16 @@ public class SaveSharedPreference {
 
     public static String getCountryCode(Context context){
         return  getSharedPrederences(context).getString(COUNTRY_CODE,"");
+    }
+
+    public static void setSapStorageLocation(Context context, String sapStorageLocation){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putString(SAP_STORAGE_LOCATION,sapStorageLocation);
+        editor.commit();
+    }
+
+    public static String getSapStorageLocation(Context context){
+        return  getSharedPrederences(context).getString(SAP_STORAGE_LOCATION,"");
     }
 
 }

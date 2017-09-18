@@ -5,6 +5,7 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Predrag.Tasic on 8/14/2017.
@@ -12,15 +13,15 @@ import retrofit2.http.Path;
 
 public interface SerbianAddressService {
 
-    @GET("getAllCommunitys")
-    Call<HashMap<String, String>> getAllCommunitys();
+    @GET("getCitySap")
+    Call<HashMap<String, String>> getAllCities();
 
 
-    @GET("getSettlementByCommunityCode/{communityCode}")
-    Call<HashMap<String, String>> getSettlementByCommunityCode(@Path("communityCode")String communityCode);
+    @GET("getRegionSap")
+    Call<HashMap<String, String>> getRegionByCityCode(@Query("cityCode") String cityCode);
 
-    @GET("getStreetsBySettlementCode/{settlementCode}")
-    Call<HashMap<String, String>> getStreetsBySettlementCode(@Path("settlementCode")String settlementCode);
+    @GET("getStreetSap")
+    Call<HashMap<String, String>> getStreetsByRegionCode(@Query("regionCode") String settlementCode);
 
 
 

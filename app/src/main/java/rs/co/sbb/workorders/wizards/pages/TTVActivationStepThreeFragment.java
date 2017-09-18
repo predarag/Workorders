@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,6 +110,9 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
         IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity()); //(Activity) this.getContext()
         scanIntegrator.initiateScan();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
     }
 
@@ -389,44 +395,65 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_2.getScanType())) {
-                etSerial2.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
+         /*       etSerial2.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
 
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_3.getScanType())) {
-                etSerial3.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
+               /* etSerial3.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_4.getScanType())) {
-                etSerial4.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etSerial4, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
+          /*      etSerial4.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
             }
 
             else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_1.getScanType())) {
-                etMac1.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
+                /*etMac1.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC1_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
 
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_2.getScanType())) {
-                etMac2.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
+           /*     etMac2.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC2_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
 
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_3.getScanType())) {
-                etMac3.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
+              /*  etMac3.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
 
             }
             else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_4.getScanType())) {
-                etMac4.setText(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent);
+
+                setTextBoxValue(response,etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
+/*                etMac4.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();
+                mPage.notifyDataChanged();*/
 
             }
 
@@ -508,11 +535,31 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
         equipmentResponse = null;
 
+        Log.i(TAG,"checkEquipment: "+serialNo);
+
         MobAppIntegrationServiceImpl service = new MobAppIntegrationServiceImpl(MobAppIntegrationConfig.SAPINTEGRATION_BASE_PATH);
 
         Call<CheckEquipmentResponse> call = service.checkSapEquipment(serialNo);
 
-        call.enqueue(new Callback<CheckEquipmentResponse>() {
+        try {
+            Response<CheckEquipmentResponse> response = call.execute();
+            if (null != response && !response.isSuccessful() && response.errorBody() != null) {
+                Log.i(TAG, response.code() + "");
+                Log.i(TAG, response.body() + "");
+                //showProgress(false);
+            }
+            else{
+                Log.i(TAG,"checkEquipment: response nije null");
+                equipmentResponse = response.body();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i(TAG, "ERROR: "+e.getMessage());
+            Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
+        }
+
+/*        call.enqueue(new Callback<CheckEquipmentResponse>() {
             @Override
             public void onResponse(Call<CheckEquipmentResponse> call, Response<CheckEquipmentResponse> response) {
                 if (null != response && !response.isSuccessful() && response.errorBody() != null) {
@@ -521,6 +568,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
                     //showProgress(false);
                 }
                 else{
+                    Log.i(TAG,"checkEquipment: response nije null");
                     equipmentResponse = response.body();
                 }
             }
@@ -530,7 +578,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
                 Log.i(TAG, "ERROR: "+t.getMessage());
                 Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
             }
-        });
+        });*/
 
         return  equipmentResponse;
 
@@ -538,14 +586,18 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
     private void setTextBoxValue(CheckEquipmentResponse response, EditText et, String dataKey, String textViewValue){
 
-        if(null != response && !response.getStatus().equals("")){
-            if(response.getStatus().equals(EStatusCode.OK.value())){
+        Log.i(TAG,"setTextBoxValue");
 
-                if(!response.getEquipment().getServiceTeamForStorageLocation().equals(SaveSharedPreference.getSapTeamId(getActivity()))){
+        if(null != response && !response.getStatus().equals("")){
+            if(response.getStatus().equals("SUCCESS")){
+
+                Log.i(TAG,"STORAGE LOCATION: "+response.getEquipment().getStorageLocationForSerialNumber());
+                Log.i(TAG,"INTERNAL STORAGE LOCATION: "+SaveSharedPreference.getSapStorageLocation(getActivity()));
+                if(!response.getEquipment().getStorageLocationForSerialNumber().equals(SaveSharedPreference.getSapStorageLocation(getActivity()))){
                     Utils.showDialog(getActivity(),getString(R.string.error), "Oprema nije dodeljenja vasem timu!");
                 }
                 else{
-                    etSerial1.setText(textViewValue);
+                    et.setText(textViewValue);
                     mPage.getData().putString(dataKey ,textViewValue);
                     mPage.notifyDataChanged();
                 }

@@ -34,16 +34,6 @@ public class TotalTvActivationHelper {
 
             request = new TotalTvActivationHolder();
 
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString());
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString());
-
             request = setUserData(mCurrentPageSequence, request, context);
 
             if(null != mCurrentPageSequence.get(1).getData().getStringArrayList(TTVActivationStepTwoPage.BILLING_PRODUCTS_DATA_KEY)) {
@@ -172,64 +162,92 @@ public class TotalTvActivationHelper {
         String email = null;
         String floor = "0000";
         String room = "0000";
+        String buildingType = "ZG";
+
+
 
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString());
             firstName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIRSTNAME_DATA_KEY).toString().toUpperCase();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString());
             lastName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString().toUpperCase();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString())) {
             community = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString();
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString());
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString());
             settelment = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY).toString()))
             street = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY).toString();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString());
             postCode = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.POST_CODE_DATA_KEY).toString();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString());
             houseNO = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.HOUSE_NO_DATA_KEY).toString();
             houseNO = Utils.generateHouseNoString(houseNO);
         }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString());
             subNo = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SUB_HOUSE_NO_DATA_KEY).toString();
             subNo = Utils.generateHouseNoString(subNo);
         }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString());
             fixNumber = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FIX_NUMBER_DATA_KEY).toString();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.MOBILE_NUMBER_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.MOBILE_NUMBER_DATA_KEY).toString()))
             mobNumber = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.MOBILE_NUMBER_DATA_KEY).toString();
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString())) {
+            Log.i(TAG,"email: "+mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString());
             email = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.EMAIL_DATA_KEY).toString().toUpperCase();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY).toString())) {
+            Log.i(TAG,"floor: "+mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY).toString());
             floor = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.FLOOR_DATA_KEY).toString();
+        }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.ROOM_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.ROOM_DATA_KEY).toString()))
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.ROOM_DATA_KEY).toString())) {
+            Log.i(TAG,"room: "+mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.ROOM_DATA_KEY).toString());
             room = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.ROOM_DATA_KEY).toString();
+        }
 
+        if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.BUILDING_TYPE_DATA_KEY) &&
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.BUILDING_TYPE_DATA_KEY).toString())) {
+            Log.i(TAG,"Building Type: "+mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.BUILDING_TYPE_DATA_KEY).toString());
+            buildingType = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.BUILDING_TYPE_DATA_KEY).toString();
+        }
 
 
         request.setFirstName(firstName);
@@ -246,7 +264,7 @@ public class TotalTvActivationHelper {
         request.setFloor(floor);
         request.setRoom(room);
         request.setCountry(SaveSharedPreference.getCountryCode(context));
-
+        request.setBuilding(buildingType);
 
         return request;
     }

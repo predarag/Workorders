@@ -113,7 +113,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
 
         SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-        Call<HashMap<String,String>> call = service.getAllCommunitys();
+        Call<HashMap<String,String>> call = service.getAllCitys();
 
         call.enqueue(new Callback<HashMap<String, String>>() {
             @Override
@@ -166,7 +166,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
 
         SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-        Call<HashMap<String,String>> call = service.getSettlementByCommunityCode(communityCode);
+        Call<HashMap<String,String>> call = service.getRegionByCityCode(communityCode);
 
         call.enqueue(new Callback<HashMap<String, String>>() {
             @Override
@@ -216,7 +216,7 @@ public class TotalTvActivationActivity extends AppCompatActivity  {
 
         SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-        Call<HashMap<String,String>> call = service.getStreetsBySettlementCode(settlementCode);
+        Call<HashMap<String,String>> call = service.getStreetsByRegionCode(settlementCode);
 
         call.enqueue(new Callback<HashMap<String, String>>() {
             @Override

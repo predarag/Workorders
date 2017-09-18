@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import rs.co.sbb.workorders.activity.HomeActivity;
+import rs.co.sbb.workorders.entity.totaltv.BuildingType;
 import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.entity.NotificationTokenRequest;
 import rs.co.sbb.workorders.entity.Response;
@@ -66,6 +68,7 @@ public class Utils {
         SaveSharedPreference.setSessionToken(context,sessionToken);
         SaveSharedPreference.setSapTeamId(context, user.getSapTeamId());
         SaveSharedPreference.setTeamUniqueId(context,user.getTeamUniqueId());
+        SaveSharedPreference.setSapStorageLocation(context,user.getStorageLocationId());
     }
 
 
@@ -79,6 +82,7 @@ public class Utils {
         SaveSharedPreference.setSapTeamId(context, null);
         SaveSharedPreference.setTeamUniqueId(context,null);
         SaveSharedPreference.setCountryCode(context,null);
+        SaveSharedPreference.setSapStorageLocation(context,null);
     }
 
     public static void deleteNotificationPreference(Context context){
@@ -209,6 +213,15 @@ public class Utils {
             return houseNo;
 
 
+    }
+
+    public static List<BuildingType> getBuildingTypes(){
+        List<BuildingType> buildingTypes = new ArrayList<>();
+
+        buildingTypes.add(new BuildingType("ZG","Zgrada"));
+        buildingTypes.add(new BuildingType("KU","Kuća"));
+
+        return  buildingTypes;
     }
 
 }

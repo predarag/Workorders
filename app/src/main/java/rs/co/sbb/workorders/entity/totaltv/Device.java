@@ -21,6 +21,14 @@ public class Device {
     @SerializedName("position")
     private int position;
 
+    @Expose
+    @SerializedName("provisioningModel")
+    private String provisioningModel;
+
+    @Expose
+    @SerializedName("equipmentType")
+    private String equipmentType;
+
     public Device(String cardSerialNo, String reciverSerialNo, int position){
         this.cardSerialNo = cardSerialNo;
         this.reciverSerialNo = reciverSerialNo;
@@ -50,5 +58,21 @@ public class Device {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getProvisioningModel() {
+        return provisioningModel;
+    }
+
+    public void setProvisioningModel(String provisioningModel) {
+        this.provisioningModel = provisioningModel;
+    }
+
+    public String getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(String equipmentType) {
+        this.equipmentType = equipmentType;
     }
 }

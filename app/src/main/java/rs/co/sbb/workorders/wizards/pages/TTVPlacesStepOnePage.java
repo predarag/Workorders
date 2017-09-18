@@ -30,6 +30,7 @@ public class TTVPlacesStepOnePage extends Page {
     public static final String EMAIL_DATA_KEY = "EMAIL_DATA_KEY";
     public static final String FLOOR_DATA_KEY = "FLOOR_DATA_KEY";
     public static final String ROOM_DATA_KEY = "ROOM_DATA_KEY";
+    public static final String BUILDING_TYPE_DATA_KEY = "BUILDING_TYPE_DATA_KEY";
 
 
 /*    private boolean completedPar = false;

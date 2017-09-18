@@ -89,6 +89,7 @@
     <string name="ttv_post_code">Broj pošte</string>
     <string name="ttv_email">Email</string>
     <string name="ttv_room">Stan</string>
+    <string name="ttv_building_type">Tip objekta</string>
     <string name="ttv_main_equipment_card_title">Glavna oprema</string>
     <string name="ttv_additiona_equipment1_card_title">Dodatni box 1</string>
     <string name="ttv_additiona_equipment2_card_title">Dodatni box 2</string>

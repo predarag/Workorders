@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +37,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
 import rs.co.sbb.workorders.entity.SerbianAddressObject;
+import rs.co.sbb.workorders.entity.totaltv.BuildingType;
+import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
 import rs.co.sbb.workorders.ws.impl.SerbianAddressServiceImpl;
 
@@ -55,12 +56,8 @@ public class TTVPlacesStepOneFragment extends Fragment {
     private String mKey;
     private TTVPlacesStepOnePage mPage;
 
-//    private TextView mNameView;
-//    private TextView mEmailView;
 
-    private Spinner communitySpinner;
-    private Spinner settlementSpinner;
-    private Spinner streetSpinner;
+
     private List<SerbianAddressObject> communitiesList = new ArrayList<>();
     private List<SerbianAddressObject> settlmentList = new ArrayList<>();
     private List<SerbianAddressObject> streetList = new ArrayList<>();
@@ -72,6 +69,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
     private AutoCompleteTextView tvCommunity;
     private AutoCompleteTextView tvSettelment;
     private AutoCompleteTextView tvStreet;
+    private AutoCompleteTextView tvBuildingType;
 
     private EditText etFirstName;
     private EditText etLastName;
@@ -145,8 +143,9 @@ public class TTVPlacesStepOneFragment extends Fragment {
         tvCommunity = (AutoCompleteTextView) rootView.findViewById(R.id.tvТtvCommunity);
         tvSettelment = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvSettelemnt);
         tvStreet = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvStreet);
+        tvBuildingType = (AutoCompleteTextView) rootView.findViewById(R.id.tvTtvBuildingType);
 
-        getAllCommunitys();
+        getCitys();
 
 
         tvCommunity.setOnTouchListener(new View.OnTouchListener() {
@@ -166,7 +165,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
                 SerbianAddressObject community = (SerbianAddressObject) parent.getAdapter().getItem(position);
                 //tvCommunity.setSelection(position);
 
-                getSettlementByCode(community.getCode());
+                getRegionByCode(community.getCode());
             }
         });
 
@@ -187,7 +186,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
                 SerbianAddressObject settelment = (SerbianAddressObject) parent.getAdapter().getItem(position);
                 // tvSettelment.setSelection(position);
 
-                getStreetBySettlementCode(settelment.getCode());
+                getStreetByRegionCode(settelment.getCode());
 
             }
 
@@ -214,6 +213,32 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
         });
 
+        populateBuildingTypes();
+
+        tvBuildingType.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tvBuildingType.showDropDown();
+                tvBuildingType.requestFocus();
+                return false;
+            }
+        });
+        tvBuildingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                BuildingType buildingType = (BuildingType) parent.getAdapter().getItem(position);
+
+                Log.i(TAG,"ITEM: "+buildingType.getCode());
+
+                mPage.getData().putString(TTVPlacesStepOnePage.BUILDING_TYPE_DATA_KEY, buildingType.getCode());
+                mPage.notifyDataChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return rootView;
     }
@@ -537,10 +562,10 @@ public class TTVPlacesStepOneFragment extends Fragment {
         super.onResume();
     }
 
-    private void getAllCommunitys() {
+    private void getCitys() {
 
 
-        Log.i(TAG, "getAllCommunitys");
+        Log.i(TAG, "getCitys");
 
         Activity activity = getActivity();
 
@@ -550,7 +575,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
             SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-            Call<HashMap<String, String>> call = service.getAllCommunitys();
+            Call<HashMap<String, String>> call = service.getAllCitys();
 
             call.enqueue(new Callback<HashMap<String, String>>() {
                 @Override
@@ -582,7 +607,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
                         sortData(communitiesList);
 
-                        populateCommunitySpinner(communitiesList);
+                        populateCitySpinner(communitiesList);
 
                     }
 
@@ -600,9 +625,9 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
 
-    private void getSettlementByCode(String communityCode) {
+    private void getRegionByCode(String cityCode) {
 
-        Log.i("communityCode", "USAO SA: " + communityCode);
+        Log.i("communityCode", "USAO SA: " + cityCode);
 
         Activity activity = getActivity();
 
@@ -614,14 +639,14 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
             SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-            Call<HashMap<String, String>> call = service.getSettlementByCommunityCode(communityCode);
+            Call<HashMap<String, String>> call = service.getRegionByCityCode(cityCode);
 
             call.enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                     if (null != response && !response.isSuccessful() && response.errorBody() != null) {
-                        Log.d("getSettlementByCode", response.code() + "");
-                        Log.d("getSettlementByCode", response.errorBody() + "");
+                        Log.d("getRegionByCode", response.code() + "");
+                        Log.d("getRegionByCode", response.errorBody() + "");
 
                         showProgress(false);
 
@@ -647,7 +672,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
                         sortData(settlmentList);
 
-                        populateSettlementSpiner(settlmentList);
+                        populateRegionSpinner(settlmentList);
                     }
                 }
 
@@ -661,9 +686,9 @@ public class TTVPlacesStepOneFragment extends Fragment {
     }
 
 
-    private void getStreetBySettlementCode(String settlementCode) {
+    private void getStreetByRegionCode(String regionCode) {
 
-        Log.i("streets", "USAO SA: " + settlementCode);
+        Log.i("streets", "USAO SA: " + regionCode);
 
         Activity activity = getActivity();
 
@@ -675,7 +700,7 @@ public class TTVPlacesStepOneFragment extends Fragment {
 
             SerbianAddressServiceImpl service = new SerbianAddressServiceImpl();
 
-            Call<HashMap<String, String>> call = service.getStreetsBySettlementCode(settlementCode);
+            Call<HashMap<String, String>> call = service.getStreetsByRegionCode(regionCode);
 
             call.enqueue(new Callback<HashMap<String, String>>() {
                 @Override
@@ -721,19 +746,17 @@ public class TTVPlacesStepOneFragment extends Fragment {
         }
     }
 
-    private void populateCommunitySpinner(List<SerbianAddressObject> communitiesList) {
-        Log.i(TAG, "populateCommunitySpinner");
+    private void populateCitySpinner(List<SerbianAddressObject> communitiesList) {
+        Log.i(TAG, "populateCitySpinner");
         ArrayAdapter<SerbianAddressObject> communityAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, communitiesList);
-        //communityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         tvCommunity.setAdapter(communityAdapter);
         showProgress(false);
     }
 
-    private void populateSettlementSpiner(List<SerbianAddressObject> settlmentList) {
-        Log.i(TAG, "populateSettlementSpiner");
+    private void populateRegionSpinner(List<SerbianAddressObject> settlmentList) {
+        Log.i(TAG, "populateRegionSpinner");
         ArrayAdapter<SerbianAddressObject> settlementAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, settlmentList);
-        //settlementAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         tvSettelment.setAdapter(settlementAdapter);
 
@@ -743,12 +766,19 @@ public class TTVPlacesStepOneFragment extends Fragment {
     private void populateStreetSpiner(List<SerbianAddressObject> settlmentList) {
         Log.i(TAG, "populateStreetSpiner");
         ArrayAdapter<SerbianAddressObject> streetAdapter = new ArrayAdapter<SerbianAddressObject>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, streetList);
-        //streetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         tvStreet.setAdapter(streetAdapter);
 
         showProgress(false);
     }
+
+    private void populateBuildingTypes(){
+        Log.i(TAG, "populateStreetSpiner");
+        ArrayAdapter<BuildingType> streetAdapter = new ArrayAdapter<BuildingType>(this.getActivity(), android.R.layout.simple_dropdown_item_1line, Utils.getBuildingTypes());
+
+        tvBuildingType.setAdapter(streetAdapter);
+    }
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {

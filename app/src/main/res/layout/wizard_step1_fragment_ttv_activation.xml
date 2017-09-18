@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/ttv_house_number"
                     android:imeActionLabel="@string/ttv_house_number"
-                    android:inputType="text" />
+                    android:inputType="number" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -167,6 +167,22 @@
                     android:hint="@string/ttv_sub_number"
                     android:imeActionLabel="@string/ttv_sub_number"
                     android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tvTtvBuildingType"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/ttv_building_type"
+                    android:imeActionLabel="@string/ttv_building_type" />
 
             </android.support.design.widget.TextInputLayout>
 
