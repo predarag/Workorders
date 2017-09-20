@@ -71,7 +71,7 @@ public class TotalTvActivationHelper {
             operaterInfo.setUsername(SaveSharedPreference.getUser(context));
             operaterInfo.setSapTeamId(SaveSharedPreference.getSapTeamId(context));
             operaterInfo.setTeamId(SaveSharedPreference.getTeamUniqueId(context));
-            operaterInfo.setChannel("USER_INIT");
+            operaterInfo.setChannel("MOB_INIT");
 
             request.setOperaterInfo(operaterInfo);
 
@@ -162,7 +162,7 @@ public class TotalTvActivationHelper {
         String email = null;
         String floor = "0000";
         String room = "0000";
-        String buildingType = "ZG";
+        String buildingType = "1";
 
 
 
@@ -179,16 +179,16 @@ public class TotalTvActivationHelper {
             lastName = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.LASTNAME_DATA_KEY).toString().toUpperCase();
         }
 
-        if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString())) {
-            community = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString();
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.COMMUNITY_DATA_KEY).toString());
+        if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY) &&
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString())) {
+            community = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString();
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString());
         }
 
-        if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY) &&
-                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString())) {
-            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString());
-            settelment = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.SETTLEMENT_DATA_KEY).toString();
+        if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY) &&
+                !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString())) {
+            Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString());
+            settelment = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString();
         }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY) &&

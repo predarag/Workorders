@@ -39,4 +39,9 @@ public class TTVActivationStepThreePage extends Page {
         dest.add(new ReviewItem("Serial No", mData.getString(SERIAL_NO1_DATA_KEY), getKey(), -1));
         dest.add(new ReviewItem("Mac", mData.getString(MAC1_DATA_KEY), getKey(), -1));
     }
+
+    @Override
+    public boolean isCompleted(){
+        return true;
+    }
 }

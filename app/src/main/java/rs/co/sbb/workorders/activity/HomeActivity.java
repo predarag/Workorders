@@ -97,6 +97,8 @@ public class HomeActivity extends AppCompatActivity {
             Snackbar.make(homeView, wizardActivationMessage, Snackbar.LENGTH_LONG).show();
         }
 
+        Utils.deleteDevicesPreference(this);
+
     }
 
 

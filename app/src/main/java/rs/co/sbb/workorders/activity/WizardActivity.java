@@ -30,6 +30,7 @@ import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
 import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.helper.TotalTvActivationHelper;
 import rs.co.sbb.workorders.wizards.model.TTVWizardModel;
+import rs.co.sbb.workorders.wizards.pages.TTVActivationStepThreeFragment;
 import rs.co.sbb.workorders.wizards.wizardpager.model.AbstractWizardModel;
 import rs.co.sbb.workorders.wizards.wizardpager.model.ModelCallbacks;
 import rs.co.sbb.workorders.wizards.wizardpager.model.Page;
@@ -53,7 +54,7 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
 
     private boolean mEditingAfterReview;
 
-    private AbstractWizardModel mWizardModel = null;
+    private AbstractWizardModel mWizardModel = new TTVWizardModel(this);
 
     private boolean mConsumePageSelectedEvent;
 
@@ -73,7 +74,9 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
 
         // TODO detect which fragments to get - TTV or WO
 
-        mWizardModel = new TTVWizardModel(this);
+        Log.i(TAG,"onCreate");
+
+        //mWizardModel = new TTVWizardModel(this);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
 //        setSupportActionBar(toolbar);
@@ -81,6 +84,8 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         if (savedInstanceState != null) {
             mWizardModel.load(savedInstanceState.getBundle("model"));
         }
+
+        mWizardModel.registerListener(this);
 
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -107,6 +112,7 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             public void onPageSelected(int position) {
                 mStepPagerStrip.setCurrentPage(position);
 
+                Log.i(TAG,"onPageSelected");
                 if (mConsumePageSelectedEvent) {
                     mConsumePageSelectedEvent = false;
                     return;
@@ -124,7 +130,7 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
                     /* TODO .show dialog throws exception */
-                    showDialogQ(WizardActivity.this, "Work order wizard - dialog", "Da li ste sigurni da želite da pošaljete radni zadatak.");
+                    showDialogQ(WizardActivity.this, "Radni nalog", "Da li ste sigurni da želite da pošaljete radni zadatak.");
 
 
                 } else {
@@ -157,6 +163,7 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
 
     @Override
     public void onPageDataChanged(Page page) {
+        Log.i(TAG,"onPageDataChanged");
         if (page.isRequired()) {
             if (recalculateCutOffPage()) {
                 mPagerAdapter.notifyDataSetChanged();
@@ -167,6 +174,7 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
 
     @Override
     public void onPageTreeChanged() {
+        Log.i(TAG,"onPageTreeChanged");
         mCurrentPageSequence = mWizardModel.getCurrentPageSequence();
         recalculateCutOffPage();
         mStepPagerStrip.setPageCount(mCurrentPageSequence.size() + 1); // + 1 =
@@ -176,13 +184,20 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         updateBottomBar();
     }
     private boolean recalculateCutOffPage() {
+        Log.i(TAG,"updateBottomBar");
         // Cut off the pager adapter at first required page that isn't completed
         int cutOffPage = mCurrentPageSequence.size() + 1;
         for (int i = 0; i < mCurrentPageSequence.size(); i++) {
             Page page = mCurrentPageSequence.get(i);
             if (page.isRequired() && !page.isCompleted()) {
+                Log.i(TAG, "page.isRequired() && !page.isCompleted()");
                 cutOffPage = i;
                 break;
+           /* }
+            else{
+                Log.i(TAG,"ELSE page.isRequired() && !page.isCompleted()");
+                updateBottomBar();
+            }*/
             }
         }
         if (mPagerAdapter.getCutOffPage() != cutOffPage) {
@@ -191,8 +206,9 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         }
         return false;
     }
-    private void updateBottomBar() {
-        int position = mPager.getCurrentItem();
+    public void updateBottomBar() {
+        Log.i(TAG,"updateBottomBar");
+ /*       int position = mPager.getCurrentItem();
         if (position == mCurrentPageSequence.size()) {
             mNextButton.setText(R.string.finish);
             mNextButton.setBackgroundResource(R.drawable.finish_background);
@@ -221,6 +237,36 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
         mPrevButton.setText(R.string.prev);
         mPrevButton
                 .setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+
+        int cutOffPage = mCurrentPageSequence.size() + 1;
+        for (int i = 0; i < mCurrentPageSequence.size(); i++) {
+            Page page = mCurrentPageSequence.get(i);
+            if (page.isCompleted()) {
+                Log.i(TAG, "page.isRequired() && !page.isCompleted()");
+                mNextButton.setEnabled(true);
+                page.setRequired(false);
+                break;
+            }
+        }*/
+
+        int position = mPager.getCurrentItem();
+        if (position == mCurrentPageSequence.size()) {
+            mNextButton.setText(R.string.finish);
+            mNextButton.setBackgroundResource(R.drawable.finish_background);
+            mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+        } else {
+            mNextButton.setText(mEditingAfterReview
+                    ? R.string.review
+                    : R.string.next);
+            mNextButton.setBackgroundResource(R.drawable.selectable_item_background);
+            TypedValue v = new TypedValue();
+            getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
+            mNextButton.setTextAppearance(this, v.resourceId);
+            mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+        }
+
+        mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+
     }
 
     @Override
@@ -374,4 +420,6 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
             }
         });
     }
+
+
 }

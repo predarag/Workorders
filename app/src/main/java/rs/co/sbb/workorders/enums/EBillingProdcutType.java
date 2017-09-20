@@ -8,7 +8,8 @@ public enum EBillingProdcutType {
 
 
     INCLUDED("INCLUDED"),
-    ADDON("AddOn");
+    ADDON("AddOn"),
+    TTV_HOME("TotalTV Kuca");
 
     private String type;
 

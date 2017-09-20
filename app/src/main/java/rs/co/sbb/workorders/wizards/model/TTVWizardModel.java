@@ -21,11 +21,11 @@ public class TTVWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new TTVPlacesStepOnePage(this, "Unos korisnika").setRequired(false),
+                new TTVPlacesStepOnePage(this, "Unos korisnika").setRequired(true),
                 /*new MultipleFixedChoicePage(this, "Test 2").setChoices(
                         "Prvi", "Drugi", "Treci", "Cetvrto", "Peti",
                         "Sesti").setRequired(false),*/
-                new TTVActivationStepTwoPage(this, "Izbor paketa").setRequired(false),
+                new TTVActivationStepTwoPage(this, "Izbor paketa").setRequired(true),
 //                new TextPage(this, "Comments").setRequired(false)
                 new TTVActivationStepThreePage(this, "Dodavanje opreme").setRequired(false)
 

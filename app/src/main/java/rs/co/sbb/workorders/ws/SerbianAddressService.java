@@ -23,6 +23,11 @@ public interface SerbianAddressService {
     @GET("getStreetSap")
     Call<HashMap<String, String>> getStreetsByRegionCode(@Query("regionCode") String settlementCode);
 
+    @GET("getPostSap")
+    Call<HashMap<String,String>> getPostCode(@Query("cityCode") String cityCode,
+                                             @Query("regionCode") String regionCode,
+                                             @Query("streetCode") String streetCode);
+
 
 
 }

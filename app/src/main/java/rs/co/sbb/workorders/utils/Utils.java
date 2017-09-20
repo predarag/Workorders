@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
@@ -15,6 +17,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import rs.co.sbb.workorders.activity.HomeActivity;
@@ -83,7 +89,15 @@ public class Utils {
         SaveSharedPreference.setTeamUniqueId(context,null);
         SaveSharedPreference.setCountryCode(context,null);
         SaveSharedPreference.setSapStorageLocation(context,null);
+        SaveSharedPreference.setSelectedTtvDevices(context,0);
+        SaveSharedPreference.setRenderedTtvDevices(context,0);
     }
+
+    public static void deleteDevicesPreference(Context context){
+        SaveSharedPreference.setSelectedTtvDevices(context,0);
+        SaveSharedPreference.setRenderedTtvDevices(context,0);
+    }
+
 
     public static void deleteNotificationPreference(Context context){
         SaveSharedPreference.setNotificationCotract(context,null);
@@ -218,10 +232,56 @@ public class Utils {
     public static List<BuildingType> getBuildingTypes(){
         List<BuildingType> buildingTypes = new ArrayList<>();
 
-        buildingTypes.add(new BuildingType("ZG","Zgrada"));
-        buildingTypes.add(new BuildingType("KU","Kuća"));
+        buildingTypes.add(new BuildingType("2","Zgrada"));
+        buildingTypes.add(new BuildingType("1","Kuća"));
+        buildingTypes.add(new BuildingType("3","Lokal"));
 
         return  buildingTypes;
     }
+
+   /* private OkHttpClient createCachedClient(final Context context) {
+        File httpCacheDirectory = new File(context.getCacheDir(), "cache_file");
+
+        Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.cache(cache);
+        okHttpClient.interceptors().add(
+                new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request originalRequest = chain.request();
+                        String cacheHeaderValue = isOnline(context)
+                                ? "public, max-age=2419200"
+                                : "public, only-if-cached, max-stale=2419200" ;
+                        Request request = originalRequest.newBuilder().build();
+                        Response response = chain.proceed(request);
+                        return response.newBuilder()
+                                .removeHeader("Pragma")
+                                .removeHeader("Cache-Control")
+                                .header("Cache-Control", cacheHeaderValue)
+                                .build();
+                    }
+                }
+        );
+        okHttpClient.networkInterceptors().add(
+                new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request originalRequest = chain.request();
+                        String cacheHeaderValue = isOnline(context)
+                                ? "public, max-age=2419200"
+                                : "public, only-if-cached, max-stale=2419200" ;
+                        Request request = originalRequest.newBuilder().build();
+                        Response response = chain.proceed(request);
+                        return response.newBuilder()
+                                .removeHeader("Pragma")
+                                .removeHeader("Cache-Control")
+                                .header("Cache-Control", cacheHeaderValue)
+                                .build();
+                    }
+                }
+        );
+        return okHttpClient;
+    }*/
 
 }

@@ -78,8 +78,8 @@
     <string name="ttv_first_name">Ime</string>
     <string name="ttv_last_name">Prezime</string>
     <string name="ttv_jbmg">JMBG</string>
-    <string name="ttv_community">Opština</string>
-    <string name="ttv_settlement">Naselje</string>
+    <string name="ttv_city">Grad</string>
+    <string name="ttv_region">Region</string>
     <string name="ttv_street">Ulica</string>
     <string name="ttv_house_number">Kućni broj</string>
     <string name="ttv_sub_number">Podbroj</string>

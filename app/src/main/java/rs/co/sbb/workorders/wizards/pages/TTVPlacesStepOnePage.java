@@ -19,8 +19,8 @@ public class TTVPlacesStepOnePage extends Page {
     public static final String FIRSTNAME_DATA_KEY = "FIRSTNAME_DATA_KEY";
     public static final String LASTNAME_DATA_KEY = "LASTNAME_DATA_KEY";
     public static final String JMBG_DATA_KEY = "JMBG_DATA_KEY";
-    public static final String COMMUNITY_DATA_KEY = "COMMUNITY_DATA_KEY";
-    public static final String SETTLEMENT_DATA_KEY = "SETTLEMENT_DATA_KEY";
+    public static final String CITY_DATA_KEY = "CITY_DATA_KEY";
+    public static final String REGION_DATA_KEY = "REGION_DATA_KEY";
     public static final String STREET_DATA_KEY = "STREET_DATA_KEY";
     public static final String HOUSE_NO_DATA_KEY = "HOUSE_NO_DATA_KEY";
     public static final String SUB_HOUSE_NO_DATA_KEY = "SUB_HOUSE_NO_DATA_KEY";
@@ -64,7 +64,14 @@ public class TTVPlacesStepOnePage extends Page {
     @Override
     public boolean isCompleted() {
         Log.i("PAGE", "isCompleted");
-        return !TextUtils.isEmpty(mData.getString(FIRSTNAME_DATA_KEY));
+        return !TextUtils.isEmpty(mData.getString(FIRSTNAME_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(LASTNAME_DATA_KEY)) &&
+                (!TextUtils.isEmpty(mData.getString(JMBG_DATA_KEY)) && mData.getString(JMBG_DATA_KEY).length() == 13) &&
+                !TextUtils.isEmpty(mData.getString(CITY_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(STREET_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(REGION_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(HOUSE_NO_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(POST_CODE_DATA_KEY));
 
 
     }

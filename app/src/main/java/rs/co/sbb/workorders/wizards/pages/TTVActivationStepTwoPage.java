@@ -23,6 +23,7 @@ public class TTVActivationStepTwoPage extends Page {
     public static final String PACKAGE_OPTION_DATA_KEY = "PACKAGE_OPTION_DATA_KEY";
     public static final String PACKAGE_OPTION_NAME_DATA_KEY = "PACKAGE_OPTION_NAME_DATA_KEY";
     public static final String PACKAGE_OPTION_DURATION_DATA_KEY = "PACKAGE_OPTION_DURATION_DATA_KEY";
+    public static final String DEVICE_NUMBER_DATA_KEY = "DEVICE_NUMBER_DATA_KEY";
 
     public TTVActivationStepTwoPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);

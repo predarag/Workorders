@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -46,6 +47,7 @@ import rs.co.sbb.workorders.enums.EBillingProdcutType;
 import rs.co.sbb.workorders.enums.ECountryCode;
 import rs.co.sbb.workorders.enums.EServiceType;
 import rs.co.sbb.workorders.enums.EStatusCode;
+import rs.co.sbb.workorders.utils.SaveSharedPreference;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
 import rs.co.sbb.workorders.ws.config.MobAppIntegrationConfig;
 import rs.co.sbb.workorders.ws.impl.MobAppIntegrationServiceImpl;
@@ -84,6 +86,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
     private View mainView;
 
     private ArrayList<String> checkedBillingProducts = new ArrayList<String>();
+
+    private int numberOfCheckedDevices =  0;
 
 
     public static TTVActivationStepTwoFragment create(String key) {
@@ -218,6 +222,11 @@ public class TTVActivationStepTwoFragment extends Fragment {
             createAddonsCheckBoxes(productPackage.getRatePlans());
         }
 
+        numberOfCheckedDevices = mPage.getData().getInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY);
+
+        Log.i(TAG,"numberOfCheckedDevices= "+numberOfCheckedDevices);
+
+
         return rootView;
     }
 
@@ -256,14 +265,33 @@ public class TTVActivationStepTwoFragment extends Fragment {
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            Log.i(TAG, buttonView.getText().toString());
-                            checkedBillingProducts.add(billingProduct.getBillingProductCode());
-                            printAddons(checkedBillingProducts);
-                        } else {
-                            Log.i(TAG, "unchecked");
-                            checkedBillingProducts.remove(billingProduct.getBillingProductCode());
-                            printAddons(checkedBillingProducts);
+                        Log.i(TAG, "Pozvan je listener");
+                        if (buttonView.isPressed()) {
+                            if (isChecked) {
+                                Log.i(TAG, buttonView.getText().toString());
+                                checkedBillingProducts.add(billingProduct.getBillingProductCode());
+
+                                if (billingProduct.getBillingProductType().equals(EBillingProdcutType.TTV_HOME.value())) {
+                                    //mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, ++numberOfCheckedDevices);
+                                    SaveSharedPreference.setSelectedTtvDevices(getActivity(),++numberOfCheckedDevices);
+                                    Log.i(TAG, "numberOfCheckedDevices= " + numberOfCheckedDevices);
+                                    mPage.notifyDataChanged();
+                                    //callStepThreeFragment();
+                                }
+
+                                printAddons(checkedBillingProducts);
+                            } else {
+                                Log.i(TAG, "unchecked");
+                                checkedBillingProducts.remove(billingProduct.getBillingProductCode());
+                                if (billingProduct.getBillingProductType().equals(EBillingProdcutType.TTV_HOME.value())) {
+                                   // mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, --numberOfCheckedDevices);
+                                    SaveSharedPreference.setSelectedTtvDevices(getActivity(),--numberOfCheckedDevices);
+                                    Log.i(TAG, "numberOfCheckedDevices= " + numberOfCheckedDevices);
+                                    mPage.notifyDataChanged();
+                                    //callStepThreeFragment();
+                                }
+                                printAddons(checkedBillingProducts);
+                            }
                         }
                     }
                 });
@@ -271,11 +299,17 @@ public class TTVActivationStepTwoFragment extends Fragment {
                 mPage.getData().putStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, checkedBillingProducts);
 
                 layoutTtvCheckBox.addView(checkBox);
+
             }
 
         }
     }
 
+    private void callStepThreeFragment(){
+        FragmentManager fm = getFragmentManager();
+        TTVActivationStepThreeFragment fragm = (TTVActivationStepThreeFragment)fm.findFragmentById(R.id.ttvStep3Frag);
+        fragm.renderDeviceInputs();
+    }
 
     private void printAddons(List<String> bps) {
         String addons = "";

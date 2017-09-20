@@ -25,6 +25,8 @@ public class SaveSharedPreference {
     private static final String NOTIFICATION_COTRACT = "NOTIFICATION_COTRACT";
     private static final String NOTIFICATION_PARTNER = "NOTIFICATION_PARTNER";
     private static final String NOTIFICATION_TIME = "NOTIFICATION_TIME";
+    private static final String SELECTED_TTV_DEVICES = "SELECTED_TTV_DEVICES";
+    private static final String RENDERED_TTV_DEVICES = "RENDERED_TTV_DEVICES";
 
 
     public static SharedPreferences getSharedPrederences(Context context){
@@ -170,6 +172,26 @@ public class SaveSharedPreference {
 
     public static String getSapStorageLocation(Context context){
         return  getSharedPrederences(context).getString(SAP_STORAGE_LOCATION,"");
+    }
+
+    public static void setSelectedTtvDevices(Context context, int selectedTtvDevices){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putInt(SELECTED_TTV_DEVICES,selectedTtvDevices);
+        editor.commit();
+    }
+
+    public static int getSelectedTtvDevices(Context context){
+        return  getSharedPrederences(context).getInt(SELECTED_TTV_DEVICES,0);
+    }
+
+    public static void setRenderedTtvDevices(Context context, int renderedTtvDevices){
+        SharedPreferences.Editor editor = getSharedPrederences(context).edit();
+        editor.putInt(RENDERED_TTV_DEVICES,renderedTtvDevices);
+        editor.commit();
+    }
+
+    public static int getRenderedTtvDevices(Context context){
+        return  getSharedPrederences(context).getInt(RENDERED_TTV_DEVICES,0);
     }
 
 }

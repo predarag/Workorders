@@ -40,7 +40,7 @@ import rs.co.sbb.workorders.ws.impl.MobAppIntegrationServiceImpl;
  * Created by milos.milic on 8/21/2017.
  */
 
-public class TTVActivationStepThreeFragment extends Fragment implements View.OnClickListener{
+public class TTVActivationStepThreeFragment extends Fragment implements View.OnClickListener {
 
     public static final String ARG_KEY = "TTV_STEP_THREE_KEY";
 
@@ -88,6 +88,9 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
     private CheckEquipmentResponse equipmentResponse = null;
 
+    private int selectedDevices;
+    private int renderedDevices;
+
     public static TTVActivationStepThreeFragment create(String key) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
@@ -111,8 +114,10 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity()); //(Activity) this.getContext()
         scanIntegrator.initiateScan();
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        Log.i(TAG, "create");
+
+       /* StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);*/
 
     }
 
@@ -160,6 +165,10 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
         setOnClickListener();
 
+        selectedDevices = SaveSharedPreference.getSelectedTtvDevices(getActivity());
+        renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
+
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,14 +196,54 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
             }
         });
 
+        renderDeviceInputs();
 
         return rootView;
     }
 
+    public void renderDeviceInputs() {
+
+        Log.i(TAG, "Selected devices: "+selectedDevices);
+
+        selectedDevices = SaveSharedPreference.getSelectedTtvDevices(getActivity());
+        renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
+
+        if (selectedDevices == 1) {
+            Log.i(TAG, "Counter 1");
+            cvAdditionalBox1.setVisibility(View.VISIBLE);
+            hasAdditionalBox1 = true;
+        }
+
+        if (selectedDevices == 2) {
+            Log.i(TAG, "Counter 2");
+
+            cvAdditionalBox1.setVisibility(View.VISIBLE);
+            hasAdditionalBox1 = true;
+
+            cvAdditionalBox2.setVisibility(View.VISIBLE);
+            hasAdditionalBox2 = true;
+        }
+
+        if (selectedDevices == 3) {
+            Log.i(TAG, "Counter 3");
+
+            cvAdditionalBox1.setVisibility(View.VISIBLE);
+            hasAdditionalBox1 = true;
+
+            cvAdditionalBox2.setVisibility(View.VISIBLE);
+            hasAdditionalBox2 = true;
+
+            cvAdditionalBox3.setVisibility(View.VISIBLE);
+            hasAdditionalBox3 = true;
+        }
+
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        Log.i(TAG, "onAttach");
 
         Activity activity = null;
         try {
@@ -218,6 +267,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i(TAG, "onDetach");
         mCallbacks = null;
     }
 
@@ -239,6 +289,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume");
     }
 
     /*@Override
@@ -336,7 +387,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         imgBtnCloseCard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hasAdditionalBox2 || hasAdditionalBox3){
+                if (hasAdditionalBox2 || hasAdditionalBox3) {
                     Snackbar.make(v, getString(R.string.ttv_snack_delete_last_additional_box), Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -351,7 +402,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         imgBtnCloseCard3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hasAdditionalBox3){
+                if (hasAdditionalBox3) {
                     Snackbar.make(v, getString(R.string.ttv_snack_delete_last_additional_box), Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -388,75 +439,66 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
             if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_1.getScanType())) {
 
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+                CheckEquipmentResponse response = checkEquipment(scanContent, etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
+                //setTextBoxValue(response, etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
 
 
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_2.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_2.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
+                //setTextBoxValue(response, etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
          /*       etSerial2.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
 
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_3.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_3.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
+                //setTextBoxValue(response, etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
                /* etSerial3.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_4.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_4.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etSerial4, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
+               // setTextBoxValue(response, etSerial4, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
           /*      etSerial4.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO4_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
-            }
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_1.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
 
-            else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_1.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
-
-                setTextBoxValue(response,etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
+              //  setTextBoxValue(response, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
                 /*etMac1.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC1_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
 
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_2.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_2.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
+              //  setTextBoxValue(response, etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
            /*     etMac2.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC2_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
 
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_3.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_3.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
+              //  setTextBoxValue(response, etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
               /*  etMac3.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
 
-            }
-            else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_4.getScanType())) {
-                CheckEquipmentResponse response = checkEquipment(scanContent);
+            } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_4.getScanType())) {
+                CheckEquipmentResponse response = checkEquipment(scanContent, etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
 
-                setTextBoxValue(response,etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
+              //  setTextBoxValue(response, etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
 /*                etMac4.setText(scanContent);
                 mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
                 mPage.notifyDataChanged();*/
 
             }
-
 
 
         } else {
@@ -531,35 +573,19 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         }
     }
 
-    private CheckEquipmentResponse checkEquipment(String serialNo){
+    private CheckEquipmentResponse checkEquipment(String serialNo, final EditText et, final String
+            dataKey,final String textViewValue) {
 
         equipmentResponse = null;
 
-        Log.i(TAG,"checkEquipment: "+serialNo);
+        Log.i(TAG, "checkEquipment: " + serialNo);
 
         MobAppIntegrationServiceImpl service = new MobAppIntegrationServiceImpl(MobAppIntegrationConfig.SAPINTEGRATION_BASE_PATH);
 
         Call<CheckEquipmentResponse> call = service.checkSapEquipment(serialNo);
 
-        try {
-            Response<CheckEquipmentResponse> response = call.execute();
-            if (null != response && !response.isSuccessful() && response.errorBody() != null) {
-                Log.i(TAG, response.code() + "");
-                Log.i(TAG, response.body() + "");
-                //showProgress(false);
-            }
-            else{
-                Log.i(TAG,"checkEquipment: response nije null");
-                equipmentResponse = response.body();
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.i(TAG, "ERROR: "+e.getMessage());
-            Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
-        }
-
-/*        call.enqueue(new Callback<CheckEquipmentResponse>() {
+        call.enqueue(new Callback<CheckEquipmentResponse>() {
             @Override
             public void onResponse(Call<CheckEquipmentResponse> call, Response<CheckEquipmentResponse> response) {
                 if (null != response && !response.isSuccessful() && response.errorBody() != null) {
@@ -570,6 +596,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
                 else{
                     Log.i(TAG,"checkEquipment: response nije null");
                     equipmentResponse = response.body();
+                    setTextBoxValue(equipmentResponse,et,dataKey,textViewValue);
                 }
             }
 
@@ -578,37 +605,35 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
                 Log.i(TAG, "ERROR: "+t.getMessage());
                 Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
             }
-        });*/
+        });
 
-        return  equipmentResponse;
+        return equipmentResponse;
 
     }
 
-    private void setTextBoxValue(CheckEquipmentResponse response, EditText et, String dataKey, String textViewValue){
+    private void setTextBoxValue(CheckEquipmentResponse response, EditText et, String
+            dataKey, String textViewValue) {
 
-        Log.i(TAG,"setTextBoxValue");
+        Log.i(TAG, "setTextBoxValue");
 
-        if(null != response && !response.getStatus().equals("")){
-            if(response.getStatus().equals("SUCCESS")){
+        if (null != response && !response.getStatus().equals("")) {
+            if (response.getStatus().equals("SUCCESS")) {
 
-                Log.i(TAG,"STORAGE LOCATION: "+response.getEquipment().getStorageLocationForSerialNumber());
-                Log.i(TAG,"INTERNAL STORAGE LOCATION: "+SaveSharedPreference.getSapStorageLocation(getActivity()));
-                if(!response.getEquipment().getStorageLocationForSerialNumber().equals(SaveSharedPreference.getSapStorageLocation(getActivity()))){
-                    Utils.showDialog(getActivity(),getString(R.string.error), "Oprema nije dodeljenja vasem timu!");
-                }
-                else{
+                Log.i(TAG, "STORAGE LOCATION: " + response.getEquipment().getStorageLocationForSerialNumber());
+                Log.i(TAG, "INTERNAL STORAGE LOCATION: " + SaveSharedPreference.getSapStorageLocation(getActivity()));
+                if (!response.getEquipment().getStorageLocationForSerialNumber().equals(SaveSharedPreference.getSapStorageLocation(getActivity()))) {
+                    Utils.showDialog(getActivity(), getString(R.string.error), "Oprema nije dodeljenja vasem timu!");
+                } else {
                     et.setText(textViewValue);
-                    mPage.getData().putString(dataKey ,textViewValue);
+                    mPage.getData().putString(dataKey, textViewValue);
                     mPage.notifyDataChanged();
                 }
 
+            } else {
+                Utils.showDialog(getActivity(), getString(R.string.error), response.getStatusMessage());
             }
-            else{
-                Utils.showDialog(getActivity(),getString(R.string.error), response.getStatusMessage());
-            }
-        }
-        else{
-            Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
+        } else {
+            Utils.showDialog(getActivity(), getString(R.string.error), getString(R.string.error_server));
         }
     }
 }

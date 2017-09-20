@@ -1,10 +1,13 @@
 package rs.co.sbb.workorders.ws.impl;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,6 +26,13 @@ import rs.co.sbb.workorders.ws.config.SerbianAddresConfig;
 public class SerbianAddressServiceImpl {
 
     private Retrofit retrofit;
+    private Context context;
+
+    private static final String TAG = "SerbianAddressService";
+
+    int cacheSize = 25 * 1024 * 1024; // 10 MB
+    //File httpCacheDirectory = new File(context.getCacheDir(), "cache_file");
+    Cache cache = new Cache(getDirectory(), cacheSize);
 
     private OkHttpClient clientAuth = new OkHttpClient().newBuilder().addInterceptor(
             new Interceptor() {
@@ -36,9 +46,11 @@ public class SerbianAddressServiceImpl {
                     return chain.proceed(newRequest);
                 }
             }
-    ).build();
+    ).cache(cache)
+            .build();
 
-    public SerbianAddressServiceImpl(){
+    public SerbianAddressServiceImpl(final Context context){
+        this.context = context;
 
         retrofit = new Retrofit.Builder()
                 .client(clientAuth)
@@ -77,4 +89,22 @@ public class SerbianAddressServiceImpl {
     }
 
 
+    public Call<HashMap<String,String>> getPostCode(String cityCode,String regionCode, String streetCode){
+
+        Log.i(TAG,cityCode+" "+regionCode+" "+streetCode);
+
+        SerbianAddressService service = retrofit.create(SerbianAddressService.class);
+
+        Call<HashMap<String,String>> call = service.getPostCode(cityCode,regionCode,streetCode);
+
+        Log.i("streets",call.request().url().toString());
+
+        return call;
+
+    }
+
+
+    private File getDirectory() {
+        return new File("address_data");
+    }
 }
