@@ -1,5 +1,7 @@
 package rs.co.sbb.workorders.ws.impl;
 
+import android.util.Log;
+
 import java.io.IOException;
 
 import okhttp3.Credentials;
@@ -13,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rs.co.sbb.workorders.entity.product_package.PackageOptionResponse;
 import rs.co.sbb.workorders.entity.product_package.ProductPackageResponse;
 import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
+import rs.co.sbb.workorders.entity.task.UserTaskResponse;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
 import rs.co.sbb.workorders.ws.MobAppIntegrationService;
@@ -76,5 +79,14 @@ public class MobAppIntegrationServiceImpl {
         return service.checkSapEquipment(serialNo);
     }
 
+    public Call<UserTaskResponse> getUserTasks(String username, String county){
+
+        Log.i("getUserTasks",username+" "+county);
+
+        MobAppIntegrationService service = retrofit.create(MobAppIntegrationService.class);
+
+        return service.getUserTasks(username, county);
+
+    }
 
 }

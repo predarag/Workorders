@@ -14,6 +14,7 @@ public class MobAppIntegrationConfig {
     public static final String PRODUCT_PACKAGE_BASE_PATH = "/rest/Ug.mobAppIntegration.pub.restResources.productcatalog/";
     public static final String SAPINTEGRATION_BASE_PATH = "/rest/Ug.mobAppIntegration.pub.restResources.sapintegration/";
     public static final String TOTALTV_BASE_PATH = "/rest/Ug.mobAppIntegration.pub.restResources.totaltv/";
+    public static final String BPM_BASE_PATH = "/rest/Ug.mobAppIntegration.pub.restResources.bpm/";
     public static final String BASE_URL = "http://"+HOST+PORT;
 
 

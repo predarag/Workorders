@@ -23,5 +23,7 @@
 
     <color name="colorRed">#FF0000</color>
 
+    <color name="task_completed">#11F019</color>
+
 
 </resources>

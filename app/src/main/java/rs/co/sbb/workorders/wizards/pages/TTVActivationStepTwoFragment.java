@@ -272,8 +272,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
                                 checkedBillingProducts.add(billingProduct.getBillingProductCode());
 
                                 if (billingProduct.getBillingProductType().equals(EBillingProdcutType.TTV_HOME.value())) {
-                                    //mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, ++numberOfCheckedDevices);
-                                    SaveSharedPreference.setSelectedTtvDevices(getActivity(),++numberOfCheckedDevices);
+                                    mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, ++numberOfCheckedDevices);
+                                    //SaveSharedPreference.setSelectedTtvDevices(getActivity(),++numberOfCheckedDevices);
                                     Log.i(TAG, "numberOfCheckedDevices= " + numberOfCheckedDevices);
                                     mPage.notifyDataChanged();
                                     //callStepThreeFragment();
@@ -284,8 +284,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
                                 Log.i(TAG, "unchecked");
                                 checkedBillingProducts.remove(billingProduct.getBillingProductCode());
                                 if (billingProduct.getBillingProductType().equals(EBillingProdcutType.TTV_HOME.value())) {
-                                   // mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, --numberOfCheckedDevices);
-                                    SaveSharedPreference.setSelectedTtvDevices(getActivity(),--numberOfCheckedDevices);
+                                    mPage.getData().putInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY, --numberOfCheckedDevices);
+                                    //SaveSharedPreference.setSelectedTtvDevices(getActivity(),--numberOfCheckedDevices);
                                     Log.i(TAG, "numberOfCheckedDevices= " + numberOfCheckedDevices);
                                     mPage.notifyDataChanged();
                                     //callStepThreeFragment();

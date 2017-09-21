@@ -90,7 +90,7 @@ public class SapWorkordersFragment extends Fragment implements SwipeRefreshLayou
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_sap_wo);
         workordersAdapter = new WorkordersAdapter(workorders,getActivity());
 
-        recyclerView.setHasFixedSize(true);
+       // recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));

@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import rs.co.sbb.workorders.R;
+import rs.co.sbb.workorders.activity.WizardActivity;
 import rs.co.sbb.workorders.activity.ocr.IntentIntegrator;
 import rs.co.sbb.workorders.activity.ocr.IntentResult;
 import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
@@ -165,9 +166,10 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
         setOnClickListener();
 
-        selectedDevices = SaveSharedPreference.getSelectedTtvDevices(getActivity());
-        renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
+        //selectedDevices = SaveSharedPreference.getSelectedTtvDevices(getActivity());
+        //renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
 
+        selectedDevices = ((WizardActivity)getActivity()).getmCurrentPageSequence().get(2).getData().getInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,7 @@ import rs.co.sbb.workorders.entity.Response;
 import rs.co.sbb.workorders.entity.product_package.PackageOptionResponse;
 import rs.co.sbb.workorders.entity.product_package.ProductPackageResponse;
 import rs.co.sbb.workorders.entity.sap.CheckEquipmentResponse;
+import rs.co.sbb.workorders.entity.task.UserTaskResponse;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationHolder;
 import rs.co.sbb.workorders.entity.totaltv.TotalTvActivationRequest;
 
@@ -31,5 +32,9 @@ public interface MobAppIntegrationService {
 
     @GET("equipment")
     public Call<CheckEquipmentResponse> checkSapEquipment(@Query("serialNo") String serailNo);
+
+    @GET("user_tasks")
+    public Call<UserTaskResponse> getUserTasks(@Query("username") String userName,
+                                               @Query("country") String country);
 
 }

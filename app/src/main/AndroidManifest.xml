@@ -60,6 +60,16 @@
                 android:value=".activity.HomeActivity" />
         </activity>
 
+        <activity android:name=".activity.OcrReaderActivity" />
+
+        <activity android:name=".activity.UserTaskDetailActivity"
+                  android:parentActivityName=".activity.WorkordersActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.WorkordersActivity"/>
+        </activity>
+
+
         <!-- [START ]SERVICES -->
 
         <service
@@ -80,7 +90,7 @@
 
         <!-- [END]SERVICES -->
 
-        <activity android:name=".activity.OcrReaderActivity" />
+
     </application>
 
 </manifest>

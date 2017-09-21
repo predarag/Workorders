@@ -59,6 +59,15 @@ public class WizardActivity extends AppCompatActivity implements PageFragmentCal
     private boolean mConsumePageSelectedEvent;
 
     private Button mNextButton;
+
+    public List<Page> getmCurrentPageSequence() {
+        return mCurrentPageSequence;
+    }
+
+    public void setmCurrentPageSequence(List<Page> mCurrentPageSequence) {
+        this.mCurrentPageSequence = mCurrentPageSequence;
+    }
+
     private Button mPrevButton;
 
     private List<Page> mCurrentPageSequence;
