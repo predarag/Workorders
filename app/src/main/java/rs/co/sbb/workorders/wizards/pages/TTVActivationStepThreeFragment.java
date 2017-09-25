@@ -440,65 +440,35 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
 
             if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_1.getScanType())) {
-
                 CheckEquipmentResponse response = checkEquipment(scanContent, etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
-
-                //setTextBoxValue(response, etSerial1, TTVActivationStepThreePage.SERIAL_NO1_DATA_KEY, scanContent);
 
 
             } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_2.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
 
-                //setTextBoxValue(response, etSerial2, TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY, scanContent);
-         /*       etSerial2.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO2_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
 
             } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_3.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
 
-                //setTextBoxValue(response, etSerial3, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
-               /* etSerial3.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
+
             } else if (clickType.equals(ETotalTvScanType.BUTTON_SERIAL_4.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
 
-               // setTextBoxValue(response, etSerial4, TTVActivationStepThreePage.SERIAL_NO3_DATA_KEY, scanContent);
-          /*      etSerial4.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.SERIAL_NO4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
+
             } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_1.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
 
-              //  setTextBoxValue(response, etMac1, TTVActivationStepThreePage.MAC1_DATA_KEY, scanContent);
-                /*etMac1.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.MAC1_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
 
             } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_2.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
 
-              //  setTextBoxValue(response, etMac2, TTVActivationStepThreePage.MAC2_DATA_KEY, scanContent);
-           /*     etMac2.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.MAC2_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
 
             } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_3.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
 
-              //  setTextBoxValue(response, etMac3, TTVActivationStepThreePage.MAC3_DATA_KEY, scanContent);
-              /*  etMac3.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
 
             } else if (clickType.equals(ETotalTvScanType.BUTTON_BOX_4.getScanType())) {
                 CheckEquipmentResponse response = checkEquipment(scanContent, etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
-
-              //  setTextBoxValue(response, etMac4, TTVActivationStepThreePage.MAC4_DATA_KEY, scanContent);
-/*                etMac4.setText(scanContent);
-                mPage.getData().putString(TTVActivationStepThreePage.MAC4_DATA_KEY ,scanContent);
-                mPage.notifyDataChanged();*/
 
             }
 

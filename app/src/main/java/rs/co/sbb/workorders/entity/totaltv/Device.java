@@ -14,7 +14,7 @@ public class Device {
     private String cardSerialNo;
 
     @Expose
-    @SerializedName("receiverSerialNO")
+    @SerializedName("receiverSerialNo")
     private String reciverSerialNo;
 
     @Expose
@@ -26,7 +26,7 @@ public class Device {
     private String provisioningModel;
 
     @Expose
-    @SerializedName("equipmentType")
+    @SerializedName("deviceType")
     private String equipmentType;
 
     public Device(String cardSerialNo, String reciverSerialNo, int position){

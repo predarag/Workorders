@@ -22,7 +22,7 @@
     <color name="total_tv_list_color">#ffa947</color>
 
     <color name="colorRed">#FF0000</color>
-
+    <color name="task_in_process">#FFFF00</color>
     <color name="task_completed">#11F019</color>
 
 

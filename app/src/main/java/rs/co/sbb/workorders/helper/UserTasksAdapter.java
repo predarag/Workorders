@@ -28,17 +28,19 @@ public class UserTasksAdapter extends RecyclerView.Adapter<UserTasksAdapter.MyVi
     private Context context;
     int processColor;
     int processFinishColor;
+    int midProcessColor;
 
     Animation animBlink;
 
     public class MyViweHolder extends RecyclerView.ViewHolder {
-        public TextView taskProcessId, taskProcessStatus, taskProcessColor;
+        public TextView taskProviderOrderNo, taskProcessStatus, taskProcessColor, taskProcessName;
 
         public MyViweHolder(View itemView) {
             super(itemView);
-            taskProcessId = (TextView) itemView.findViewById(R.id.tvUserTaskNo);
+            taskProviderOrderNo = (TextView) itemView.findViewById(R.id.tvUserTaskNo);
             taskProcessStatus = (TextView) itemView.findViewById(R.id.tvUserTaskProcessStatus);
             taskProcessColor = (TextView) itemView.findViewById(R.id.tvUserTaskProcessColor);
+            taskProcessName = (TextView) itemView.findViewById(R.id.tvUserTaskName);
         }
     }
 
@@ -51,6 +53,7 @@ public class UserTasksAdapter extends RecyclerView.Adapter<UserTasksAdapter.MyVi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             processColor = context.getColor(R.color.total_tv_list_color);
             processFinishColor = context.getColor(R.color.task_completed);
+            midProcessColor = context.getColor(R.color.task_in_process);
         }
 
         animBlink = AnimationUtils.loadAnimation(context,
@@ -78,11 +81,20 @@ public class UserTasksAdapter extends RecyclerView.Adapter<UserTasksAdapter.MyVi
         Log.i("HumanWorkorderFragment",task.getTaskId());
 
         holder.taskProcessStatus.setText(task.getTaskStatus());
-        holder.taskProcessId.setText(task.getTaskId());
+        holder.taskProcessName.setText(task.getFirstName()+" "+task.getLastName());
+        if(null != task.getProviderOrderId() && !task.getProviderOrderId().equals("")) {
+            holder.taskProviderOrderNo.setText(task.getProviderOrderId());
+        }
 
         if (task.getTaskStatus().equals(ETaskStatus.IN_PROCESS.getStatus())) {
             holder.taskProcessColor.setAnimation(animBlink);
-            holder.taskProcessColor.setBackgroundColor(processColor);
+            if(null != task.getProviderOrderId() && !task.getProviderOrderId().equals("")) {
+                holder.taskProcessColor.setBackgroundColor(midProcessColor);
+            }
+            else{
+                holder.taskProcessColor.setBackgroundColor(processColor);
+            }
+
         } else {
             holder.taskProcessColor.setBackgroundColor(processFinishColor);
         }

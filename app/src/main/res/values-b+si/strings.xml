@@ -108,6 +108,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Nemate ni jedan nalog koji je u procesu</string>
 
+    <string name="user_task_firstname">Ime</string>
+    <string name="user_task_lastname">Prezime</string>
+    <string name="user_task_partner_no">Partner No</string>
+    <string name="user_task_provider_no">Provider Order No</string>
+    <string name="user_task_service_order">Service Order No</string>
+    <string name="user_task_sap_team">Sap tim</string>
+    <string name="user_task_internal_team">Interni tim</string>
+    <string name="user_task_status">Status</string>
+    <string name="user_task_id">Task ID</string>
+    <string name="user_task_bpm_id">BPM ID</string>
+    <string name="user_task_name">Ime i prezime</string>
+
 
 </resources>
 

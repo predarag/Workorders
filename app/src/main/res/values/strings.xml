@@ -120,6 +120,7 @@
     <string name="user_task_status">Status</string>
     <string name="user_task_id">Task ID</string>
     <string name="user_task_bpm_id">BPM ID</string>
+    <string name="user_task_name">Ime i prezime</string>
 
 </resources>
 

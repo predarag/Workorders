@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.EditText;
 
 import rs.co.sbb.workorders.R;
@@ -50,21 +51,34 @@ public class UserTaskDetailActivity extends AppCompatActivity {
 
         int processColor = ContextCompat.getColor(this,R.color.total_tv_list_color);
         int processFinishColor = ContextCompat.getColor(this,R.color.task_completed);
+        int midProcessColor = ContextCompat.getColor(this,R.color.task_in_process);
 
         if(task != null){
             etFirstName.setText(task.getFirstName());
             etLastName.setText(task.getLastName());
-            etPartnerNo.setText(task.getPartnerNo());
-            etProviderOrderNo.setText(task.getProviderOrderId());
-            etServiceOrderNo.setText(task.getServiceOrderId());
+
+            if(!TextUtils.isEmpty(task.getPartnerNo()))
+                etPartnerNo.setText(task.getPartnerNo());
+
+            if(!TextUtils.isEmpty(task.getProviderOrderId()))
+                etProviderOrderNo.setText(task.getProviderOrderId());
+
+            if(!TextUtils.isEmpty(task.getServiceOrderId()))
+                etServiceOrderNo.setText(task.getServiceOrderId());
+
             etSapTeamId.setText(task.getSapTeamId());
             etInternalTeamId.setText(task.getTeamId());
             etTaskStatus.setText(task.getTaskStatus());
             etBpmId.setText(task.getBpmId());
             etTaskId.setText(task.getTaskId());
 
-            if(task.getTaskStatus().equals(ETaskStatus.IN_PROCESS.getStatus()))
-                etTaskStatus.setTextColor(processColor);
+            if(task.getTaskStatus().equals(ETaskStatus.IN_PROCESS.getStatus())) {
+                if(null != task.getProviderOrderId() && !task.getProviderOrderId().equals(""))
+                    etTaskStatus.setTextColor(midProcessColor);
+                else
+                    etTaskStatus.setTextColor(processColor);
+
+            }
             else
                 etTaskStatus.setTextColor(processFinishColor);
 
