@@ -1,8 +1,12 @@
 package rs.co.sbb.workorders.wizards.pages;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
@@ -92,6 +96,9 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
     private int selectedDevices;
     private int renderedDevices;
 
+    private View viewEquipmentForm;
+    private View progressView;
+
     public static TTVActivationStepThreeFragment create(String key) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
@@ -163,6 +170,9 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         imgBtnCloseCard4 = (ImageButton) rootView.findViewById(R.id.ibCloseCard4);
 
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabTtvAddEquipment);
+
+        viewEquipmentForm = (View) rootView.findViewById(R.id.ttv_equipment_form);
+        progressView = (View) rootView.findViewById(R.id.total_tv_equipment_progress);
 
         setOnClickListener();
 
@@ -548,6 +558,8 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
     private CheckEquipmentResponse checkEquipment(String serialNo, final EditText et, final String
             dataKey,final String textViewValue) {
 
+        showProgress(true);
+
         equipmentResponse = null;
 
         Log.i(TAG, "checkEquipment: " + serialNo);
@@ -563,7 +575,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
                 if (null != response && !response.isSuccessful() && response.errorBody() != null) {
                     Log.i(TAG, response.code() + "");
                     Log.i(TAG, response.body() + "");
-                    //showProgress(false);
+                    showProgress(false);
                 }
                 else{
                     Log.i(TAG,"checkEquipment: response nije null");
@@ -574,6 +586,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
 
             @Override
             public void onFailure(Call<CheckEquipmentResponse> call, Throwable t) {
+                showProgress(true);
                 Log.i(TAG, "ERROR: "+t.getMessage());
                 Utils.showDialog(getActivity(),getString(R.string.error), getString(R.string.error_server));
             }
@@ -587,6 +600,8 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
             dataKey, String textViewValue) {
 
         Log.i(TAG, "setTextBoxValue");
+
+        showProgress(false);
 
         if (null != response && !response.getStatus().equals("")) {
             if (response.getStatus().equals("SUCCESS")) {
@@ -608,4 +623,35 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
             Utils.showDialog(getActivity(), getString(R.string.error), getString(R.string.error_server));
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            viewEquipmentForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            viewEquipmentForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    viewEquipmentForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            viewEquipmentForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
 }
