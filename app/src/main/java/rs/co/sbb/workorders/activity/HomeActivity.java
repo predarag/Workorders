@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private static final String TAG = "HomeActivity";
+
+    private CardView cvTtvActivation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -102,5 +102,10 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
 </resources>
 

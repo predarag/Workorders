@@ -46,20 +46,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!--                <TextView
-                                    android:id="@+id/tvTtvPackage"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="5dp"
-                                    android:layout_marginTop="10dp"
-                                    android:text="Paket:" />
-
-                                <Spinner
-                                    android:id="@+id/spinnerTtvPackages"
-                                    android:layout_width="288dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/tvTtvPackage"
-                                    android:visibility="visible" />-->
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -98,20 +84,111 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"
-                    android:text="Dodaci"
+                    android:text="@string/ttv_addons_title"
+                    android:textColor="@color/colorAccent"
                     android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorAccent"/>
+                    android:textStyle="bold" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/ttvPackagesLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_below="@+id/tvTtvBps"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_below="@+id/tvTtvBps"/>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTtvBpIncluded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/ttv_addons_included"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic"
+                        android:visibility="invisible" />
+
+                    <LinearLayout
+                        android:id="@+id/ttvBpIncluded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/tvTtvBpIncluded"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+
+                    <View
+                        android:id="@+id/ttvViewSeparator2"
+                        android:layout_width="250dp"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/ttvBpIncluded"
+                        android:layout_gravity="center"
+                        android:background="@android:color/darker_gray"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/tvTtvBpVideo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/ttv_addons_video"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic"
+                        android:visibility="invisible"
+                        android:layout_below="@+id/ttvViewSeparator2"/>
+
+
+                    <LinearLayout
+                        android:id="@+id/ttvBpVideo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/tvTtvBpVideo"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+                    <View
+                        android:id="@+id/ttvViewSeparator1"
+                        android:layout_width="250dp"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/ttvBpVideo"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/darker_gray"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/tvTtvBpHome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ttvViewSeparator1"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/ttv_addons_home"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12dp"
+                        android:textStyle="bold|italic"
+                        android:visibility="invisible" />
+
+                    <LinearLayout
+                        android:id="@+id/ttvBpTtvHouse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/tvTtvBpHome"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical" />
+
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -129,20 +206,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!--<TextView
-                    android:id="@+id/tvTtvOption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Opcija:" />
-
-                <Spinner
-                    android:id="@+id/spinnerTtvPackageOptions"
-                    android:layout_width="288dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvTtvOption"
-                    android:visibility="visible" />-->
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"

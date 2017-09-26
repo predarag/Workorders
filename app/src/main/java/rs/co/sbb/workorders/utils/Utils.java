@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import rs.co.sbb.workorders.activity.HomeActivity;
+import rs.co.sbb.workorders.entity.product_package.BillingProduct;
 import rs.co.sbb.workorders.entity.totaltv.BuildingType;
 import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.entity.NotificationTokenRequest;
@@ -239,49 +241,15 @@ public class Utils {
         return  buildingTypes;
     }
 
-   /* private OkHttpClient createCachedClient(final Context context) {
-        File httpCacheDirectory = new File(context.getCacheDir(), "cache_file");
 
-        Cache cache = new Cache(httpCacheDirectory, 20 * 1024 * 1024);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.cache(cache);
-        okHttpClient.interceptors().add(
-                new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request originalRequest = chain.request();
-                        String cacheHeaderValue = isOnline(context)
-                                ? "public, max-age=2419200"
-                                : "public, only-if-cached, max-stale=2419200" ;
-                        Request request = originalRequest.newBuilder().build();
-                        Response response = chain.proceed(request);
-                        return response.newBuilder()
-                                .removeHeader("Pragma")
-                                .removeHeader("Cache-Control")
-                                .header("Cache-Control", cacheHeaderValue)
-                                .build();
-                    }
-                }
-        );
-        okHttpClient.networkInterceptors().add(
-                new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request originalRequest = chain.request();
-                        String cacheHeaderValue = isOnline(context)
-                                ? "public, max-age=2419200"
-                                : "public, only-if-cached, max-stale=2419200" ;
-                        Request request = originalRequest.newBuilder().build();
-                        Response response = chain.proceed(request);
-                        return response.newBuilder()
-                                .removeHeader("Pragma")
-                                .removeHeader("Cache-Control")
-                                .header("Cache-Control", cacheHeaderValue)
-                                .build();
-                    }
-                }
-        );
-        return okHttpClient;
-    }*/
+
+    public static void sortBillingProductsByMappingType(List<BillingProduct> billingProducts){
+        Collections.sort(billingProducts, new Comparator<BillingProduct>() {
+            @Override
+            public int compare(BillingProduct o1, BillingProduct o2) {
+                return o1.getMappingType().compareTo(o2.getMappingType());
+            }
+        });
+    }
 
 }

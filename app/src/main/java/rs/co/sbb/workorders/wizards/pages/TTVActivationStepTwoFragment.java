@@ -26,8 +26,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.android.gms.vision.text.Line;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,7 @@ import rs.co.sbb.workorders.enums.ECountryCode;
 import rs.co.sbb.workorders.enums.EServiceType;
 import rs.co.sbb.workorders.enums.EStatusCode;
 import rs.co.sbb.workorders.utils.SaveSharedPreference;
+import rs.co.sbb.workorders.utils.Utils;
 import rs.co.sbb.workorders.wizards.wizardpager.ui.PageFragmentCallbacks;
 import rs.co.sbb.workorders.ws.config.MobAppIntegrationConfig;
 import rs.co.sbb.workorders.ws.impl.MobAppIntegrationServiceImpl;
@@ -70,9 +74,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
     private AutoCompleteTextView optionsSpinner;
 
 
-
     private List<String> packages = new ArrayList<String>();
-    private LinearLayout layoutTtvCheckBox;
     private CheckBox checkBox;
 
 
@@ -87,7 +89,18 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
     private ArrayList<String> checkedBillingProducts = new ArrayList<String>();
 
-    private int numberOfCheckedDevices =  0;
+    private int numberOfCheckedDevices = 0;
+
+    private RelativeLayout layoutTtvCheckBox;
+    private LinearLayout ttvBpVideo;
+    private LinearLayout ttvBpTtvHouse;
+    private LinearLayout ttvBpIncluded;
+    private View separatorLine1;
+    private View separatorLine2;
+
+    private TextView tvTtvBpIncluded;
+    private TextView tvTtvBpVideo;
+    private TextView tvTtvBpHome;
 
 
     public static TTVActivationStepTwoFragment create(String key) {
@@ -111,7 +124,6 @@ public class TTVActivationStepTwoFragment extends Fragment {
         mKey = args.getString(ARG_KEY);
         mPage = (TTVActivationStepTwoPage) mCallbacks.onGetPage(mKey);
         Log.i(TAG, "onCreate");
-
 
 
     }
@@ -142,7 +154,17 @@ public class TTVActivationStepTwoFragment extends Fragment {
         getProductPackages();
 
 
-        layoutTtvCheckBox = (LinearLayout) rootView.findViewById(R.id.ttvPackagesLayout);
+        layoutTtvCheckBox = (RelativeLayout) rootView.findViewById(R.id.ttvPackagesLayout);
+
+        ttvBpVideo = (LinearLayout) rootView.findViewById(R.id.ttvBpVideo);
+        ttvBpTtvHouse = (LinearLayout) rootView.findViewById(R.id.ttvBpTtvHouse);
+        ttvBpIncluded = (LinearLayout) rootView.findViewById(R.id.ttvBpIncluded);
+        separatorLine1 = (View) rootView.findViewById(R.id.ttvViewSeparator1);
+        separatorLine2 = (View) rootView.findViewById(R.id.ttvViewSeparator2);
+
+        tvTtvBpIncluded = (TextView) rootView.findViewById(R.id.tvTtvBpIncluded);
+        tvTtvBpVideo = (TextView) rootView.findViewById(R.id.tvTtvBpVideo);
+        tvTtvBpHome = (TextView) rootView.findViewById(R.id.tvTtvBpHome);
 
         packagesSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -172,10 +194,10 @@ public class TTVActivationStepTwoFragment extends Fragment {
                 createAddonsCheckBoxes(productPackage.getRatePlans());
 
                 getPackageOptions(productPackage.getProductPackageCode());
-                closeKeyboard(getActivity(),packagesSpinner.getWindowToken());
+                closeKeyboard(getActivity(), packagesSpinner.getWindowToken());
 
                 mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_NAME_DATA_KEY, productPackage.getProductPackageName());
-                mPage.getData().putSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET,productPackage);
+                mPage.getData().putSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET, productPackage);
                 mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, productPackage.getProductPackageCode());
                 mPage.notifyDataChanged();
 
@@ -205,7 +227,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
         optionsSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                closeKeyboard(getActivity(),optionsSpinner.getWindowToken());
+                closeKeyboard(getActivity(), optionsSpinner.getWindowToken());
                 ProductPackageOption option = (ProductPackageOption) parent.getAdapter().getItem(position);
                 mPage.getData().putString(TTVActivationStepTwoPage.PACKAGE_OPTION_DATA_KEY, option.getOptionNumber());
                 mPage.getData().putString(TTVActivationStepTwoPage.PACKAGE_OPTION_NAME_DATA_KEY, option.getDescription());
@@ -216,7 +238,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
         });
 
-        if(mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET) != null ){
+        if (mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET) != null) {
             ProductPackage productPackage = (ProductPackage) mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET);
 
             createAddonsCheckBoxes(productPackage.getRatePlans());
@@ -224,7 +246,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
         numberOfCheckedDevices = mPage.getData().getInt(TTVActivationStepTwoPage.DEVICE_NUMBER_DATA_KEY);
 
-        Log.i(TAG,"numberOfCheckedDevices= "+numberOfCheckedDevices);
+        Log.i(TAG, "numberOfCheckedDevices= " + numberOfCheckedDevices);
 
 
         return rootView;
@@ -233,22 +255,34 @@ public class TTVActivationStepTwoFragment extends Fragment {
     private void createAddonsCheckBoxes(List<RatePlan> ratePlanList) {
 
         layoutTtvCheckBox.removeAllViews();
+        ttvBpVideo.removeAllViews();
+        ttvBpTtvHouse.removeAllViews();
+        ttvBpIncluded.removeAllViews();
+
+        boolean hasIncludedAddons = false;
 
         for (RatePlan ratePlan : ratePlanList) {
 
             int i = 0;
 
+            List<BillingProduct> billingProducts = ratePlan.getBillingProducts();
+
+            Utils.sortBillingProductsByMappingType(billingProducts);
+
             for (final BillingProduct billingProduct : ratePlan.getBillingProducts()) {
 
                 checkBox = new CheckBox(getContext());
                 checkBox.setId(i++);
-                checkBox.setText(billingProduct.getBillingProductName());
+
+                String checkBoxTitle = billingProduct.getBillingProductName();
+
+
                 checkBox.setHighlightColor(getResources().getColor(R.color.colorPrimary));
 
-                if(mPage.getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY) != null){
+                if (mPage.getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY) != null) {
                     List<String> checkedBpsTemp = (List<String>) mPage.getData().getStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY);
-                    for(String checkedBp : checkedBpsTemp){
-                        if(checkedBp.equals(billingProduct.getBillingProductCode()))
+                    for (String checkedBp : checkedBpsTemp) {
+                        if (checkedBp.equals(billingProduct.getBillingProductCode()))
                             checkBox.setChecked(true);
                     }
                 }
@@ -260,7 +294,23 @@ public class TTVActivationStepTwoFragment extends Fragment {
                     checkBox.setClickable(true);
                     checkBox.setChecked(false);
 
+                    checkBoxTitle += " ("+billingProduct.getPrice()+" "+getString(R.string.addon_price_valute)+")";
+
                 }
+
+                if (!billingProduct.getMappingType().equals(EBillingProdcutType.INCLUDED.value()) && billingProduct.getBillingProductType().equals(EBillingProdcutType.TTV_HOME.value())) {
+                    Log.i(TAG, "INCLUDED && HOME");
+                    ttvBpTtvHouse.addView(checkBox);
+                } else if (billingProduct.getMappingType().equals(EBillingProdcutType.INCLUDED.value())) {
+                    Log.i(TAG, "INCLUDED");
+                    ttvBpIncluded.addView(checkBox);
+                    hasIncludedAddons = true;
+                } else {
+                    Log.i(TAG, "VIDEO");
+                    ttvBpVideo.addView(checkBox);
+                }
+
+                checkBox.setText(checkBoxTitle);
 
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -298,16 +348,44 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
                 mPage.getData().putStringArrayList(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, checkedBillingProducts);
 
-                layoutTtvCheckBox.addView(checkBox);
 
             }
 
         }
+
+        addCheckBoxViews(hasIncludedAddons);
+
+
     }
 
-    private void callStepThreeFragment(){
+    private void addCheckBoxViews(boolean hasIncludedAddons) {
+        layoutTtvCheckBox.addView(ttvBpIncluded);
+
+        if (hasIncludedAddons) {
+            tvTtvBpIncluded.setVisibility(View.VISIBLE);
+            layoutTtvCheckBox.addView(tvTtvBpIncluded);
+
+            separatorLine2.setVisibility(View.VISIBLE);
+            layoutTtvCheckBox.addView(separatorLine2);
+
+        }
+
+        tvTtvBpVideo.setVisibility(View.VISIBLE);
+        layoutTtvCheckBox.addView(tvTtvBpVideo);
+        layoutTtvCheckBox.addView(ttvBpVideo);
+
+        separatorLine1.setVisibility(View.VISIBLE);
+        layoutTtvCheckBox.addView(separatorLine1);
+
+        tvTtvBpHome.setVisibility(View.VISIBLE);
+        layoutTtvCheckBox.addView(tvTtvBpHome);
+
+        layoutTtvCheckBox.addView(ttvBpTtvHouse);
+    }
+
+    private void callStepThreeFragment() {
         FragmentManager fm = getFragmentManager();
-        TTVActivationStepThreeFragment fragm = (TTVActivationStepThreeFragment)fm.findFragmentById(R.id.ttvStep3Frag);
+        TTVActivationStepThreeFragment fragm = (TTVActivationStepThreeFragment) fm.findFragmentById(R.id.ttvStep3Frag);
         fragm.renderDeviceInputs();
     }
 
@@ -377,15 +455,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
 
-        // In a future update to the support library, this should override setUserVisibleHint
-        // instead of setMenuVisibility.
-       /* if (mNameView != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            if (!menuVisible) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        }*/
+
     }
 
 
@@ -422,7 +492,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG,"onResume");
+        Log.i(TAG, "onResume");
     }
 
     private void getProductPackages() {

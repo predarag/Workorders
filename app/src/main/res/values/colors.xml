@@ -25,5 +25,7 @@
     <color name="task_in_process">#FFFF00</color>
     <color name="task_completed">#11F019</color>
 
+    <color name="colorBlack">#000000</color>
+
 
 </resources>

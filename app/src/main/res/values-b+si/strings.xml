@@ -103,7 +103,10 @@
     <string name="ttv_message_workorder_activation_failed">Došlo je do greške prilikom slanja radnog naloga.</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="ttv_addons_title">Dodaci</string>
+    <string name="ttv_addons_included">Uključeni</string>
+    <string name="ttv_addons_video">Video</string>
+    <string name="ttv_addons_home">Kuća</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Nemate ni jedan nalog koji je u procesu</string>
@@ -119,6 +122,9 @@
     <string name="user_task_id">Task ID</string>
     <string name="user_task_bpm_id">BPM ID</string>
     <string name="user_task_name">Ime i prezime</string>
+
+    <string name="home_ttv_activation">TotalTV Aktivacija</string>
+    <string name="addon_price_valute">EUR</string>
 
 
 </resources>

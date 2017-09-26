@@ -66,7 +66,6 @@ public class TTVPlacesStepOnePage extends Page {
         Log.i("PAGE", "isCompleted");
         return !TextUtils.isEmpty(mData.getString(FIRSTNAME_DATA_KEY)) &&
                 !TextUtils.isEmpty(mData.getString(LASTNAME_DATA_KEY)) &&
-                (!TextUtils.isEmpty(mData.getString(JMBG_DATA_KEY)) && mData.getString(JMBG_DATA_KEY).length() == 13) &&
                 !TextUtils.isEmpty(mData.getString(CITY_DATA_KEY)) &&
                 !TextUtils.isEmpty(mData.getString(STREET_DATA_KEY)) &&
                 !TextUtils.isEmpty(mData.getString(REGION_DATA_KEY)) &&

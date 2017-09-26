@@ -208,7 +208,7 @@ public class TTVActivationStepThreeFragment extends Fragment implements View.OnC
         Log.i(TAG, "Selected devices: "+selectedDevices);
 
         selectedDevices = SaveSharedPreference.getSelectedTtvDevices(getActivity());
-        renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
+        //renderedDevices = SaveSharedPreference.getRenderedTtvDevices(getActivity());
 
         if (selectedDevices == 1) {
             Log.i(TAG, "Counter 1");

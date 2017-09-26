@@ -81,7 +81,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVSerialNo1"
@@ -144,7 +145,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVMacNo1"
@@ -156,7 +158,8 @@
                                         android:imeActionLabel="@string/action_ttv_ocr_scan_box"
                                         android:imeOptions="actionUnspecified"
                                         android:inputType="text"
-                                        android:maxLines="1" />
+                                        android:maxLines="1"
+                                        />
 
                                 </android.support.design.widget.TextInputLayout>
 
@@ -256,7 +259,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVSerialNo2"
@@ -317,7 +321,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVMacNo2"
@@ -415,13 +420,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
-                                <!--
-                                                                <LinearLayout
-                                                                    android:id="@+id/linearSerial3"
-                                                                    android:layout_width="558dp"
-                                                                    android:layout_height="wrap_content"
-                                                                    android:orientation="horizontal"
-                                                                    android:weightSum="1">-->
 
                                 <android.support.design.widget.TextInputLayout
                                     android:id="@+id/tiTtvSerial3"
@@ -430,7 +428,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVSerialNo3"
@@ -477,12 +476,6 @@
                                 android:layout_height="wrap_content">
 
 
-                                <!--            <LinearLayout
-                                                android:id="@+id/linearBox3"
-                                                android:layout_width="558dp"
-                                                android:layout_height="wrap_content"
-                                                android:orientation="horizontal"
-                                                android:weightSum="1">-->
 
                                 <android.support.design.widget.TextInputLayout
                                     android:id="@+id/tiTtvMac3"
@@ -491,7 +484,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVMacNo3"
@@ -596,7 +590,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVSerialNo4"
@@ -649,7 +644,8 @@
                                     android:layout_marginRight="75dp"
                                     android:layout_weight="0.30"
                                     android:gravity="left"
-                                    android:theme="@style/EditTextInputLayout">
+                                    android:theme="@style/EditTextInputLayout"
+                                    app:hintTextAppearance="@style/TextLabel">
 
                                     <EditText
                                         android:id="@+id/etTTVMacNo4"
