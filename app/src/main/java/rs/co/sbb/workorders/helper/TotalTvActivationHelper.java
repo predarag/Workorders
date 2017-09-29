@@ -133,15 +133,15 @@ public class TotalTvActivationHelper {
             mac4 = mCurrentPageSequence.get(2).getData().get(TTVActivationStepThreePage.MAC4_DATA_KEY).toString();
 
         if(null != serial1 && null != mac1)
-            devices.add(new Device(serial1, mac1,1));
+            devices.add(new Device(serial1, mac1,"1"));
 
         if(null != serial2 && null != mac2)
-            devices.add(new Device(serial2, mac2,2));
+            devices.add(new Device(serial2, mac2,"2"));
 
         if(null != serial3 && null != mac3)
-            devices.add(new Device(serial3, mac3,3));
+            devices.add(new Device(serial3, mac3,"3"));
         if(null != serial4 && null != mac4)
-            devices.add(new Device(serial4, mac4,4));
+            devices.add(new Device(serial4, mac4,"4"));
 
 
 
@@ -151,8 +151,8 @@ public class TotalTvActivationHelper {
     private static TotalTvActivationHolder setUserData(List<Page> mCurrentPageSequence, TotalTvActivationHolder request, Context context) {
         String firstName = null;
         String lastName= null;
-        String community = null;
-        String settelment = null;
+        String city = null;
+        String region = null;
         String street = null;
         String postCode = null;
         String houseNO = null;
@@ -181,14 +181,14 @@ public class TotalTvActivationHelper {
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString())) {
-            community = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString();
+            city = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString();
             Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.CITY_DATA_KEY).toString());
         }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY) &&
                 !TextUtils.isEmpty(mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString())) {
             Log.i(TAG, mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString());
-            settelment = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString();
+            region = mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.REGION_DATA_KEY).toString();
         }
 
         if(null != mCurrentPageSequence.get(0).getData().get(TTVPlacesStepOnePage.STREET_DATA_KEY) &&
@@ -252,9 +252,9 @@ public class TotalTvActivationHelper {
 
         request.setFirstName(firstName);
         request.setLastName(lastName);
-        request.setCity("BEOGRAD");
-        request.setRegion("BEOGRAD-NOVI BEOGRAD");
-        request.setStreet("OMLADINSKIH BRIGADA");
+        request.setCity(city);
+        request.setRegion(region);
+        request.setStreet(street);
         request.setPostcode(postCode);
         request.setHouseNum(houseNO);
         request.setHouseNum2(subNo);

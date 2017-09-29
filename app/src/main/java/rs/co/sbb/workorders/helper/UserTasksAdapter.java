@@ -77,8 +77,8 @@ public class UserTasksAdapter extends RecyclerView.Adapter<UserTasksAdapter.MyVi
 
         Log.i("HumanWorkorderFragment","onBindViewHolder init..");
 
-        Log.i("HumanWorkorderFragment",task.getTaskStatus());
-        Log.i("HumanWorkorderFragment",task.getTaskId());
+        Log.i("HumanWorkorderFragment",task.getTaskStatus() == null ? "" :task.getTaskStatus());
+        Log.i("HumanWorkorderFragment",task.getTaskId() ==null ? "" : task.getTaskId());
 
         holder.taskProcessStatus.setText(task.getTaskStatus());
         holder.taskProcessName.setText(task.getFirstName()+" "+task.getLastName());
