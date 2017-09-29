@@ -2,6 +2,7 @@ package rs.co.sbb.workorders.wizards.pages;
 
 
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,7 @@ public class TTVActivationStepThreePage extends Page {
 
     @Override
     public boolean isCompleted(){
-        return true;
+        return !TextUtils.isEmpty(mData.getString(SERIAL_NO1_DATA_KEY)) &&
+                !TextUtils.isEmpty(mData.getString(MAC1_DATA_KEY));
     }
 }

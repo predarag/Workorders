@@ -197,7 +197,7 @@ public class TTVActivationStepTwoFragment extends Fragment {
                 closeKeyboard(getActivity(), packagesSpinner.getWindowToken());
 
                 mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_NAME_DATA_KEY, productPackage.getProductPackageName());
-                mPage.getData().putSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET, productPackage);
+                mPage.getData().putSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KEY, productPackage);
                 mPage.getData().putString(TTVActivationStepTwoPage.PRODUCT_PACKAGE_DATA_KEY, productPackage.getProductPackageCode());
                 mPage.notifyDataChanged();
 
@@ -238,8 +238,8 @@ public class TTVActivationStepTwoFragment extends Fragment {
 
         });
 
-        if (mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET) != null) {
-            ProductPackage productPackage = (ProductPackage) mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KET);
+        if (mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KEY) != null) {
+            ProductPackage productPackage = (ProductPackage) mPage.getData().getSerializable(TTVActivationStepTwoPage.PRODUCT_PACKAGE_OBJECT_DATA_KEY);
 
             createAddonsCheckBoxes(productPackage.getRatePlans());
         }

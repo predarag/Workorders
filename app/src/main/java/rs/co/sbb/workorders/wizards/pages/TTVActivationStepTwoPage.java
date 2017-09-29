@@ -18,7 +18,7 @@ public class TTVActivationStepTwoPage extends Page {
 
     public static final String PRODUCT_PACKAGE_DATA_KEY = "PRODUCT_PACKAGE_DATA_KEY";
     public static final String PRODUCT_PACKAGE_NAME_DATA_KEY = "PRODUCT_PACKAGE_NAME_DATA_KEY";
-    public static final String PRODUCT_PACKAGE_OBJECT_DATA_KET = "PRODUCT_PACKAGE_OBJECT_DATA_KET";
+    public static final String PRODUCT_PACKAGE_OBJECT_DATA_KEY = "PRODUCT_PACKAGE_OBJECT_DATA_KEY";
     public static final String BILLING_PRODUCTS_DATA_KEY = "BILLING_PRODUCTS_DATA_KEY";
     public static final String PACKAGE_OPTION_DATA_KEY = "PACKAGE_OPTION_DATA_KEY";
     public static final String PACKAGE_OPTION_NAME_DATA_KEY = "PACKAGE_OPTION_NAME_DATA_KEY";
